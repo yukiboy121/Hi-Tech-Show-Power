@@ -2,8 +2,9 @@ import { db } from "@/db";
 import { sites, siteImages } from "@/db/schema";
 import { authErrorResponse, requireAdmin } from "@/lib/auth";
 import { eq } from "drizzle-orm";
+import { NextRequest } from "next/server";
 
-export async function GET(req: Request, context: { params: { id: string } }) {
+export async function GET(req: NextRequest, context: { params: { id: string } }) {
   try {
     await requireAdmin();
     const siteId = Number(context.params.id);
