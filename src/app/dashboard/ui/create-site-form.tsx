@@ -2,6 +2,17 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
+import { IconMapPin } from "@/components/icons";
+
+const LocationMapPicker = dynamic(() => import("@/components/location-map-picker"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex h-56 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-500">
+      Loading map...
+    </div>
+  ),
+});
 
 export default function CreateSiteForm({
   redirectTo,
@@ -15,6 +26,8 @@ export default function CreateSiteForm({
   const router = useRouter();
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
+  const [latitude, setLatitude] = useState("");
+  const [longitude, setLongitude] = useState("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -28,12 +41,14 @@ export default function CreateSiteForm({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ name, location, description }),
+        body: JSON.stringify({ name, location, latitude, longitude, description }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || "Failed to create site");
       setName("");
       setLocation("");
+      setLatitude("");
+      setLongitude("");
       setDescription("");
       if (data.id) {
         onSuccess?.();
@@ -66,14 +81,25 @@ export default function CreateSiteForm({
         />
       </div>
       <div>
-        <label className="mb-1 block text-sm font-medium">Location</label>
+        <label className="mb-1 flex items-center gap-1.5 text-sm font-medium">
+          <IconMapPin className="h-4 w-4 text-brand-600" />
+          Location / Address
+        </label>
         <input
           value={location}
           onChange={(e) => setLocation(e.target.value)}
-          placeholder="City / Address"
+          placeholder="City, address, or landmark"
           className="w-full rounded-lg border border-slate-300 px-3 py-3 text-sm outline-none focus:ring-2 focus:ring-brand-500"
         />
       </div>
+      <LocationMapPicker
+        latitude={latitude}
+        longitude={longitude}
+        onChange={({ latitude: lat, longitude: lng }) => {
+          setLatitude(lat);
+          setLongitude(lng);
+        }}
+      />
       <div>
         <label className="mb-1 block text-sm font-medium">Description</label>
         <textarea

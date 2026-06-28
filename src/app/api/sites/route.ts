@@ -12,6 +12,8 @@ export async function GET() {
         id: sites.id,
         name: sites.name,
         location: sites.location,
+        latitude: sites.latitude,
+        longitude: sites.longitude,
         description: sites.description,
         createdAt: sites.createdAt,
         imagesCount: sql<number>`count(${siteImages.id})`.mapWith(Number),
@@ -34,10 +36,12 @@ export async function POST(req: NextRequest) {
     const user = await requireAdmin();
     const data = await req.json().catch(() => null);
     if (!data) return Response.json({ error: "Invalid JSON" }, { status: 400 });
-    const { name, location, description } = data as {
+    const { name, location, description, latitude, longitude } = data as {
       name?: string;
       location?: string;
       description?: string;
+      latitude?: string;
+      longitude?: string;
     };
     if (!name?.trim()) return Response.json({ error: "Name is required" }, { status: 400 });
     const rows = await db
@@ -45,6 +49,8 @@ export async function POST(req: NextRequest) {
       .values({
         name: name.trim(),
         location: location?.trim() || null,
+        latitude: latitude?.trim() || null,
+        longitude: longitude?.trim() || null,
         description: description?.trim() || null,
         createdBy: user.id,
       })
