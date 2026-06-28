@@ -3,7 +3,15 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function CreateSiteForm({ redirectTo }: { redirectTo?: string }) {
+export default function CreateSiteForm({
+  redirectTo,
+  onSuccess,
+  onCancel,
+}: {
+  redirectTo?: string;
+  onSuccess?: () => void;
+  onCancel?: () => void;
+}) {
   const router = useRouter();
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
@@ -28,11 +36,14 @@ export default function CreateSiteForm({ redirectTo }: { redirectTo?: string }) 
       setLocation("");
       setDescription("");
       if (data.id) {
+        onSuccess?.();
         router.push(`${redirectTo ?? "/admin/sites"}/${data.id}`);
       } else if (redirectTo) {
+        onSuccess?.();
         router.push(redirectTo);
         router.refresh();
       } else {
+        onSuccess?.();
         router.refresh();
       }
     } catch (e: unknown) {
@@ -72,12 +83,25 @@ export default function CreateSiteForm({ redirectTo }: { redirectTo?: string }) 
         />
       </div>
       {error && <p className="text-sm text-red-600">{error}</p>}
-      <button
-        disabled={loading}
-        className="w-full rounded-xl bg-brand-600 px-4 py-3 text-sm font-semibold text-white hover:bg-brand-700 disabled:opacity-60"
-      >
-        {loading ? "Creating..." : "Create Site"}
-      </button>
+      <div className="flex gap-2">
+        {onCancel && (
+          <button
+            type="button"
+            onClick={onCancel}
+            disabled={loading}
+            className="flex-1 rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 active:bg-slate-50 disabled:opacity-60"
+          >
+            Cancel
+          </button>
+        )}
+        <button
+          type="submit"
+          disabled={loading}
+          className={`rounded-xl bg-brand-600 px-4 py-3 text-sm font-semibold text-white hover:bg-brand-700 disabled:opacity-60 ${onCancel ? "flex-1" : "w-full"}`}
+        >
+          {loading ? "Creating..." : "Create Site"}
+        </button>
+      </div>
     </form>
   );
 }
