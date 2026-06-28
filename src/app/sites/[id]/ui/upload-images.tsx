@@ -1,8 +1,10 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function UploadImages({ siteId }: { siteId: number }) {
   const [files, setFiles] = useState<FileList | null>(null);
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -20,9 +22,8 @@ export default function UploadImages({ siteId }: { siteId: number }) {
       const res = await fetch(`/api/sites/${siteId}/images`, { method: "POST", body: fd });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || "Upload failed");
-      setFiles(null);
-      // refresh
-      window.location.reload();
+      (e.target as HTMLFormElement).reset();
+      router.refresh();
     } catch (e: any) {
       setError(e.message || "Upload failed");
     } finally {
