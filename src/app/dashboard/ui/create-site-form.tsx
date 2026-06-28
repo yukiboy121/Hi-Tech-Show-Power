@@ -37,7 +37,8 @@ export default function CreateSiteForm({
       setDescription("");
       if (data.id) {
         onSuccess?.();
-        router.push(`${redirectTo ?? "/admin/sites"}/${data.id}`);
+        const basePath = redirectTo || "/admin/sites";
+        router.push(`${basePath}/${data.id}`);
       } else if (redirectTo) {
         onSuccess?.();
         router.push(redirectTo);

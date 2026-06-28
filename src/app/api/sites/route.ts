@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
       description?: string;
     };
     if (!name?.trim()) return Response.json({ error: "Name is required" }, { status: 400 });
-    const [row] = await db
+    const rows = await db
       .insert(sites)
       .values({
         name: name.trim(),
@@ -49,7 +49,8 @@ export async function POST(req: NextRequest) {
         createdBy: user.id,
       })
       .returning({ id: sites.id });
-    return Response.json({ ok: true, id: row.id });
+    if (!rows[0]) throw new Error("Site creation failed, no ID returned.");
+    return Response.json({ ok: true, id: rows[0].id });
   } catch (error) {
     const authRes = authErrorResponse(error);
     if (authRes) return authRes;
