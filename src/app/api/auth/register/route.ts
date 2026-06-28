@@ -13,6 +13,16 @@ export async function POST(req: NextRequest) {
       return Response.json({ error: "Missing fields" }, { status: 400 });
     }
 
+    if (password.length < 8) {
+      return Response.json({ error: "Password must be at least 8 characters long" }, { status: 400 });
+    }
+
+    // Basic email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return Response.json({ error: "Invalid email format" }, { status: 400 });
+    }
+
     const existing = await db.select().from(users).where(eq(users.email, email.toLowerCase())).limit(1);
     if (existing.length) {
       return Response.json({ error: "Email already registered" }, { status: 400 });
