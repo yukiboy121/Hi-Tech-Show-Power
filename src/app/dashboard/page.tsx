@@ -43,6 +43,7 @@ export default async function DashboardPage() {
               <div className="flex flex-col gap-2 text-sm">
                 <Link href="/admin/orders" className="rounded-md border border-slate-300 px-3 py-2">Manage Orders</Link>
                 <Link href="/admin/repairs" className="rounded-md border border-slate-300 px-3 py-2">Manage Repairs</Link>
+                <Link href="/admin/users" className="rounded-md border border-slate-300 px-3 py-2">Manage Users</Link>
               </div>
             </div>
           </div>
