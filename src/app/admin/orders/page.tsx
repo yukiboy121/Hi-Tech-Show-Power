@@ -95,7 +95,7 @@ export default function AdminOrdersPage() {
                 <select
                   value={o.status}
                   onChange={(e) => updateStatus(o.id, e.target.value)}
-                  className="rounded-lg border border-slate-300 px-2 py-1.5 text-xs outline-none focus:ring-2 focus:ring-brand-500"
+                  className="rounded-lg border-slate-200 text-xs capitalize"
                 >
                   {statuses.map((s) => (
                     <option key={s} value={s}>
@@ -104,11 +104,6 @@ export default function AdminOrdersPage() {
                   ))}
                 </select>
               </div>
-              {o.details && (
-                <pre className="mt-3 whitespace-pre-wrap rounded-lg bg-slate-50 p-3 text-xs text-slate-700">
-                  {o.details}
-                </pre>
-              )}
             </div>
           ))}
         </div>

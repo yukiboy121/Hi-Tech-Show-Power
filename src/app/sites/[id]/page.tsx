@@ -3,8 +3,8 @@ import { SiteDetail } from "@/components/site-detail";
 
 export const dynamic = "force-dynamic";
 
-export default async function SitePage({ params }: { params: Promise<{ id: string }> }) {
-  const { id: idParam } = await params;
+export default function SitePage({ params }: { params: { id: string } }) {
+  const { id: idParam } = params;
   const siteId = Number(idParam);
   if (!Number.isFinite(siteId)) notFound();
 
