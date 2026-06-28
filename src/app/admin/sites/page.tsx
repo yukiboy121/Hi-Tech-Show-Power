@@ -3,6 +3,7 @@ import { sites, siteImages } from "@/db/schema";
 import { desc, eq, sql } from "drizzle-orm";
 import Link from "next/link";
 import CreateSiteForm from "@/app/dashboard/ui/create-site-form";
+import { IconCamera, IconMapPin } from "@/components/icons";
 
 export const dynamic = "force-dynamic";
 
@@ -42,7 +43,7 @@ export default async function AdminSitesPage() {
 
           {siteRows.length === 0 ? (
             <div className="py-10 text-center">
-              <p className="text-3xl">📍</p>
+              <IconMapPin className="mx-auto h-10 w-10 text-slate-300" />
               <p className="mt-2 text-sm text-slate-500">No sites yet. Create one above.</p>
             </div>
           ) : (
@@ -62,8 +63,9 @@ export default async function AdminSitesPage() {
                         {s.location || "No location"}
                       </p>
                     </div>
-                    <span className="shrink-0 rounded-full bg-brand-50 px-2 py-0.5 text-[10px] font-medium text-brand-700">
-                      {s.imagesCount} 📷
+                    <span className="flex shrink-0 items-center gap-1 rounded-full bg-brand-50 px-2 py-0.5 text-[10px] font-medium text-brand-700">
+                      <IconCamera className="h-3 w-3" />
+                      {s.imagesCount}
                     </span>
                   </div>
                   {s.description && (

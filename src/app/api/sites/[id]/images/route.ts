@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { put } from "@vercel/blob";
 import { requireAdmin } from "@/lib/auth";
 import { db } from "@/db";
 import { sites, siteImages } from "@/db/schema";
@@ -20,21 +21,39 @@ export async function POST(req: NextRequest, context: { params: Promise<{ id: st
   const files = form.getAll("files");
   if (!files.length) return Response.json({ error: "No files" }, { status: 400 });
 
-  const uploadDir = path.join(process.cwd(), "public", "uploads", "sites");
-  await fs.mkdir(uploadDir, { recursive: true });
-
   const savedPaths: string[] = [];
+  const useBlob = Boolean(process.env.BLOB_READ_WRITE_TOKEN);
 
   for (const f of files) {
-    if (!(f instanceof File)) continue;
-    const buf = Buffer.from(await f.arrayBuffer());
+    if (!(f instanceof File) || f.size === 0) continue;
+
     const ext = path.extname(f.name) || ".jpg";
-    const filename = `${siteId}-${Date.now()}-${Math.random().toString(36).slice(2)}${ext}`;
-    const filePath = path.join(uploadDir, filename);
-    await fs.writeFile(filePath, buf);
-    const publicPath = `/uploads/sites/${filename}`;
+    const filename = `sites/${siteId}-${Date.now()}-${Math.random().toString(36).slice(2)}${ext}`;
+
+    let publicPath: string;
+
+    if (useBlob) {
+      const blob = await put(filename, f, {
+        access: "public",
+        token: process.env.BLOB_READ_WRITE_TOKEN,
+      });
+      publicPath = blob.url;
+    } else {
+      const uploadDir = path.join(process.cwd(), "public", "uploads", "sites");
+      await fs.mkdir(uploadDir, { recursive: true });
+      const localName = path.basename(filename);
+      const filePath = path.join(uploadDir, localName);
+      const buf = Buffer.from(await f.arrayBuffer());
+      await fs.writeFile(filePath, buf);
+      publicPath = `/uploads/sites/${localName}`;
+    }
+
     await db.insert(siteImages).values({ siteId, path: publicPath });
     savedPaths.push(publicPath);
+  }
+
+  if (!savedPaths.length) {
+    return Response.json({ error: "No valid images uploaded" }, { status: 400 });
   }
 
   return Response.json({ ok: true, paths: savedPaths });

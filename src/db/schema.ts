@@ -26,6 +26,8 @@ export const sites = pgTable("sites", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 200 }).notNull(),
   location: varchar("location", { length: 300 }),
+  latitude: varchar("latitude", { length: 32 }),
+  longitude: varchar("longitude", { length: 32 }),
   description: text("description"),
   createdBy: integer("created_by").references(() => users.id, { onDelete: "set null" }),
   createdAt: timestamp("created_at", { withTimezone: false }).notNull().defaultNow(),

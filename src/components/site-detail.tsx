@@ -4,8 +4,8 @@ import { eq } from "drizzle-orm";
 import { notFound, redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
 import Link from "next/link";
-import UploadImages from "@/app/sites/[id]/ui/upload-images";
-import EditSiteForm from "@/app/dashboard/ui/edit-site-form";
+import SiteDetailAdmin from "@/components/site-detail-admin";
+import { IconCamera, IconChevronLeft, IconMapPin } from "@/components/icons";
 
 export const dynamic = "force-dynamic";
 
@@ -32,50 +32,53 @@ export async function SiteDetail({ siteId, backHref, backLabel }: Props) {
         href={backHref}
         className="mb-4 inline-flex items-center gap-1.5 text-sm font-medium text-brand-600 hover:underline"
       >
-        ← {backLabel}
+        <IconChevronLeft className="h-4 w-4" />
+        {backLabel}
       </Link>
 
-      <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-        <div className="flex flex-wrap items-start justify-between gap-3">
-          <div>
-            <h1 className="text-xl font-bold text-brand-900 sm:text-2xl">{site.name}</h1>
-            <p className="mt-1 text-sm text-slate-600">{site.location || "No location set"}</p>
-            {site.description && (
-              <p className="mt-3 text-sm leading-relaxed text-slate-700">{site.description}</p>
-            )}
+      {isAdmin ? (
+        <SiteDetailAdmin
+          site={{
+            id: site.id,
+            name: site.name,
+            location: site.location,
+            latitude: site.latitude,
+            longitude: site.longitude,
+            description: site.description,
+          }}
+          photoCount={imgs.length}
+        />
+      ) : (
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <h1 className="text-xl font-bold text-brand-900 sm:text-2xl">{site.name}</h1>
+              {site.location && (
+                <p className="mt-1 flex items-center gap-1.5 text-sm text-slate-600">
+                  <IconMapPin className="h-4 w-4 text-brand-600" />
+                  {site.location}
+                </p>
+              )}
+              {site.description && (
+                <p className="mt-3 text-sm leading-relaxed text-slate-700">{site.description}</p>
+              )}
+            </div>
+            <span className="flex items-center gap-1 rounded-full bg-brand-50 px-3 py-1 text-xs font-medium text-brand-700">
+              <IconCamera className="h-3.5 w-3.5" />
+              {imgs.length}
+            </span>
           </div>
-          <span className="rounded-full bg-brand-50 px-3 py-1 text-xs font-medium text-brand-700">
-            {imgs.length} photo{imgs.length !== 1 ? "s" : ""}
-          </span>
-        </div>
-      </div>
-
-      {isAdmin && (
-        <div className="mt-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
-          <h2 className="mb-3 font-semibold text-brand-900">Edit Site Details</h2>
-          <EditSiteForm
-            siteId={siteId}
-            initial={{
-              name: site.name,
-              location: site.location ?? "",
-              description: site.description ?? "",
-            }}
-          />
-        </div>
-      )}
-
-      {isAdmin && (
-        <div className="mt-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
-          <h2 className="mb-3 font-semibold text-brand-900">Upload Photos</h2>
-          <UploadImages siteId={siteId} />
         </div>
       )}
 
       <div className="mt-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
-        <h2 className="mb-4 font-semibold text-brand-900">Site Gallery</h2>
+        <h2 className="mb-4 flex items-center gap-2 font-semibold text-brand-900">
+          <IconCamera className="h-5 w-5 text-brand-600" />
+          Site Gallery
+        </h2>
         {imgs.length === 0 ? (
           <div className="rounded-xl border-2 border-dashed border-slate-200 py-12 text-center">
-            <p className="text-3xl">📷</p>
+            <IconCamera className="mx-auto h-10 w-10 text-slate-300" />
             <p className="mt-2 text-sm text-slate-500">No photos uploaded yet</p>
             {isAdmin && <p className="mt-1 text-xs text-slate-400">Use the form above to add images</p>}
           </div>

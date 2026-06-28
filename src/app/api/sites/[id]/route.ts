@@ -18,10 +18,12 @@ export async function PATCH(req: NextRequest, context: { params: Promise<{ id: s
   const data = await req.json().catch(() => null);
   if (!data) return Response.json({ error: "Invalid JSON" }, { status: 400 });
 
-  const { name, location, description } = data as {
+  const { name, location, description, latitude, longitude } = data as {
     name?: string;
     location?: string;
     description?: string;
+    latitude?: string;
+    longitude?: string;
   };
 
   if (name !== undefined && !name.trim()) {
@@ -33,6 +35,8 @@ export async function PATCH(req: NextRequest, context: { params: Promise<{ id: s
     .set({
       ...(name !== undefined ? { name: name.trim() } : {}),
       ...(location !== undefined ? { location: location.trim() || null } : {}),
+      ...(latitude !== undefined ? { latitude: latitude.trim() || null } : {}),
+      ...(longitude !== undefined ? { longitude: longitude.trim() || null } : {}),
       ...(description !== undefined ? { description: description.trim() || null } : {}),
     })
     .where(eq(sites.id, siteId))
@@ -40,6 +44,8 @@ export async function PATCH(req: NextRequest, context: { params: Promise<{ id: s
       id: sites.id,
       name: sites.name,
       location: sites.location,
+      latitude: sites.latitude,
+      longitude: sites.longitude,
       description: sites.description,
     });
 
