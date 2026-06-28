@@ -23,6 +23,8 @@ type PwaInstallContextValue = {
   isIOS: boolean;
   isAndroid: boolean;
   isStandalone: boolean;
+  isAppMode: boolean;
+  isAppModeReady: boolean;
   install: () => Promise<InstallResult>;
 };
 
@@ -171,12 +173,26 @@ export default function PwaInstallProvider({ children }: { children: ReactNode }
   const [isIOS, setIsIOS] = useState(false);
   const [isAndroid, setIsAndroid] = useState(false);
   const [isStandalone, setIsStandalone] = useState(false);
+  const [isAppMode, setIsAppMode] = useState(false);
+  const [isAppModeReady, setIsAppModeReady] = useState(false);
   const [guide, setGuide] = useState<"ios" | "android" | null>(null);
 
   useEffect(() => {
+    const standalone = detectStandalone();
+    const inCapacitor = detectInCapacitor();
+    const previewApp =
+      typeof window !== "undefined" &&
+      new URLSearchParams(window.location.search).get("app") === "1";
+
     setIsIOS(detectIOS());
     setIsAndroid(detectAndroid());
-    setIsStandalone(detectStandalone() || detectInCapacitor());
+    setIsStandalone(standalone || inCapacitor);
+    setIsAppMode(standalone || inCapacitor || previewApp);
+    setIsAppModeReady(true);
+
+    if (standalone || inCapacitor || previewApp) {
+      document.documentElement.classList.add("app-mode");
+    }
 
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("/sw.js").catch(() => {});
@@ -220,9 +236,11 @@ export default function PwaInstallProvider({ children }: { children: ReactNode }
       isIOS,
       isAndroid,
       isStandalone,
+      isAppMode,
+      isAppModeReady,
       install,
     }),
-    [deferredPrompt, isIOS, isAndroid, isStandalone, install],
+    [deferredPrompt, isIOS, isAndroid, isStandalone, isAppMode, isAppModeReady, install],
   );
 
   return (

@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import { orders } from "@/db/schema";
 import { requireAdmin, requireUser } from "@/lib/auth";
+import { notifyAdminsServiceRequest } from "@/lib/notifications";
 import { desc, eq } from "drizzle-orm";
 import { NextRequest } from "next/server";
 
@@ -22,6 +23,14 @@ export async function POST(req: NextRequest) {
     .insert(orders)
     .values({ title, details: details || null, createdBy: user.id })
     .returning({ id: orders.id });
+
+  await notifyAdminsServiceRequest({
+    orderId: row.id,
+    customerName: user.name,
+    phone: "App user",
+    service: title,
+    message: details || undefined,
+  });
 
   return Response.json({ ok: true, id: row.id });
 }

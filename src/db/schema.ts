@@ -47,6 +47,26 @@ export const orders = pgTable("orders", {
   createdAt: timestamp("created_at", { withTimezone: false }).notNull().defaultNow(),
 });
 
+export const notifications = pgTable("notifications", {
+  id: serial("id").primaryKey(),
+  type: varchar("type", { length: 50 }).notNull(),
+  title: varchar("title", { length: 200 }).notNull(),
+  body: text("body"),
+  link: varchar("link", { length: 300 }),
+  orderId: integer("order_id").references(() => orders.id, { onDelete: "cascade" }),
+  read: boolean("read").notNull().default(false),
+  createdAt: timestamp("created_at", { withTimezone: false }).notNull().defaultNow(),
+});
+
+export const pushSubscriptions = pgTable("push_subscriptions", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  endpoint: text("endpoint").notNull().unique(),
+  p256dh: text("p256dh").notNull(),
+  auth: text("auth").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: false }).notNull().defaultNow(),
+});
+
 export const repairs = pgTable("repairs", {
   id: serial("id").primaryKey(),
   siteId: integer("site_id").references(() => sites.id, { onDelete: "set null" }),

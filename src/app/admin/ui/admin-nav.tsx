@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import AdminNotifications from "./admin-notifications";
 import { business } from "@/lib/business";
 
 const links = [
@@ -71,8 +72,13 @@ export default function AdminNav() {
       <aside className="hidden w-60 shrink-0 border-r border-slate-200 bg-white lg:block">
         <div className="sticky top-0 flex h-screen flex-col p-4">
           <div className="mb-6 rounded-xl bg-brand-600 p-4 text-white">
-            <p className="text-xs font-bold uppercase tracking-wider text-red-100">Admin Panel</p>
-            <p className="mt-1 text-sm font-semibold">{business.shortName}</p>
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-wider text-red-100">Admin Panel</p>
+                <p className="mt-1 text-sm font-semibold">{business.shortName}</p>
+              </div>
+              <AdminNotifications />
+            </div>
           </div>
           <NavLinks className="flex flex-1 flex-col gap-1.5" />
           <Link
@@ -102,6 +108,7 @@ export default function AdminNav() {
               {currentPage?.icon} {currentPage?.label || "Admin"}
             </p>
           </div>
+          <AdminNotifications />
           <a
             href={`tel:${business.hotlineTel}`}
             className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-600 text-lg text-white active:bg-brand-700"

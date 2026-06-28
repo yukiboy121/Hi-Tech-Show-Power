@@ -22,6 +22,14 @@ body {
   padding-bottom: env(safe-area-inset-bottom);
 }
 
+html.app-mode body {
+  background: #f1f5f9;
+}
+
+html.app-mode .app-main {
+  -webkit-overflow-scrolling: touch;
+}
+
 /* Better touch targets on mobile */
 @media (max-width: 768px) {
   input,

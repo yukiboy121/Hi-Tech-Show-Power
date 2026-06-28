@@ -11,7 +11,8 @@
     "mobile:setup": "node scripts/generate-icons.mjs & cd mobile && npm install && npx cap add android 2>nul & npx cap add ios 2>nul & npx cap sync",
     "mobile:sync": "cd mobile && npx cap sync",
     "mobile:android": "cd mobile && npx cap sync && npx cap open android",
-    "mobile:ios": "cd mobile && npx cap sync && npx cap open ios"
+    "mobile:ios": "cd mobile && npx cap sync && npx cap open ios",
+    "vapid:generate": "node -e \"const w=require('web-push');const k=w.generateVAPIDKeys();console.log('NEXT_PUBLIC_VAPID_PUBLIC_KEY='+k.publicKey);console.log('VAPID_PRIVATE_KEY='+k.privateKey);\""
   },
   "dependencies": {
     "@types/bcryptjs": "^2.4.6",
@@ -21,7 +22,8 @@
     "next": "16.2.6",
     "pg": "8.20.0",
     "react": "19.2.6",
-    "react-dom": "19.2.6"
+    "react-dom": "19.2.6",
+    "web-push": "^3.6.7"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "4.1.17",
@@ -29,6 +31,7 @@
     "@types/pg": "8.18.0",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
+    "@types/web-push": "^3.6.4",
     "drizzle-kit": "0.31.10",
     "eslint": "9.39.4",
     "eslint-config-next": "16.2.6",

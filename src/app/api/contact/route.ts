@@ -1,5 +1,6 @@
 import { db } from "@/db";
 import { orders } from "@/db/schema";
+import { notifyAdminsServiceRequest } from "@/lib/notifications";
 import { NextRequest } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -21,6 +22,18 @@ export async function POST(req: NextRequest) {
   const title = `Contact: ${service || "General"} — ${name}`;
   const details = `Name: ${name}\nEmail: ${email || "N/A"}\nPhone: ${phone}\nService: ${service || "General"}\n\n${message}`;
 
-  await db.insert(orders).values({ title, details, status: "pending" });
+  const [row] = await db
+    .insert(orders)
+    .values({ title, details, status: "pending" })
+    .returning({ id: orders.id });
+
+  await notifyAdminsServiceRequest({
+    orderId: row.id,
+    customerName: name,
+    phone,
+    service: service || "General",
+    message,
+  });
+
   return Response.json({ ok: true });
 }
