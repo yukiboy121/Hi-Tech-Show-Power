@@ -5,21 +5,26 @@ import { NextRequest } from "next/server";
 import { desc, eq, sql } from "drizzle-orm";
 
 export async function GET() {
-  await requireUser();
-  const rows = await db
-    .select({
-      id: sites.id,
-      name: sites.name,
-      location: sites.location,
-      description: sites.description,
-      createdAt: sites.createdAt,
-      imagesCount: sql<number>`count(${siteImages.id})`.mapWith(Number),
-    })
-    .from(sites)
-    .leftJoin(siteImages, eq(siteImages.siteId, sites.id))
-    .groupBy(sites.id)
-    .orderBy(desc(sites.createdAt));
-  return Response.json({ sites: rows });
+  try {
+    await requireUser();
+    const rows = await db
+      .select({
+        id: sites.id,
+        name: sites.name,
+        location: sites.location,
+        description: sites.description,
+        createdAt: sites.createdAt,
+        imagesCount: sql<number>`count(${siteImages.id})`.mapWith(Number),
+      })
+      .from(sites)
+      .leftJoin(siteImages, eq(siteImages.siteId, sites.id))
+      .groupBy(sites.id)
+      .orderBy(desc(sites.createdAt));
+    return Response.json({ sites: rows });
+  } catch (e) {
+    console.error(e);
+    return Response.json({ error: "Server error" }, { status: 500 });
+  }
 }
 
 export async function POST(req: NextRequest) {
