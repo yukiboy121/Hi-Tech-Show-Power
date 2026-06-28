@@ -4,6 +4,7 @@ import "./globals.css";
 import SiteHeader from "@/components/site-header";
 import SiteFooter from "@/components/site-footer";
 import InstallAppBanner from "@/components/install-app-banner";
+import PwaInstallProvider from "@/components/pwa-install-provider";
 import { getCurrentUser } from "@/lib/auth";
 import { business } from "@/lib/business";
 
@@ -39,10 +40,12 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   return (
     <html lang="en">
       <body className="flex min-h-screen flex-col bg-slate-50 text-slate-900 antialiased">
-        <SiteHeader user={navUser} />
-        <main className="flex-1 pb-20 md:pb-0">{children}</main>
-        <SiteFooter />
-        <InstallAppBanner />
+        <PwaInstallProvider>
+          <SiteHeader user={navUser} />
+          <main className="flex-1 pb-20 md:pb-0">{children}</main>
+          <SiteFooter />
+          <InstallAppBanner />
+        </PwaInstallProvider>
       </body>
     </html>
   );

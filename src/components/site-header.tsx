@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import InstallAppButton from "@/components/install-app-button";
+import { usePwaInstall } from "@/components/pwa-install-provider";
 import { business } from "@/lib/business";
 
 type NavUser = { name: string; role: "admin" | "user" } | null;
@@ -17,6 +19,7 @@ const publicLinks = [
 export default function SiteHeader({ user }: { user: NavUser }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const { isStandalone } = usePwaInstall();
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -168,6 +171,12 @@ export default function SiteHeader({ user }: { user: NavUser }) {
               >
                 📞 Call {business.hotline}
               </a>
+
+              {!isStandalone && (
+                <div className="mt-3">
+                  <InstallAppButton variant="primary" fullWidth className="!bg-brand-600 !text-white hover:!bg-brand-700" />
+                </div>
+              )}
 
               <div className="mt-3 space-y-2">
                 {user ? (

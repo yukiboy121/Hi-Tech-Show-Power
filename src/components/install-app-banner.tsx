@@ -1,61 +1,25 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import InstallAppButton from "@/components/install-app-button";
+import { usePwaInstall } from "@/components/pwa-install-provider";
 import { business } from "@/lib/business";
 
-type BeforeInstallPromptEvent = Event & {
-  prompt: () => Promise<void>;
-  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
-};
-
 export default function InstallAppBanner() {
+  const { canPromptInstall, isIOS, isStandalone } = usePwaInstall();
   const [show, setShow] = useState(false);
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
-  const [isIOS, setIsIOS] = useState(false);
-  const [isStandalone, setIsStandalone] = useState(false);
 
   useEffect(() => {
-    const standalone =
-      window.matchMedia("(display-mode: standalone)").matches ||
-      (window.navigator as Navigator & { standalone?: boolean }).standalone === true;
-    setIsStandalone(standalone);
-
-    const ios = /iPad|iPhone|iPod/.test(navigator.userAgent);
-    setIsIOS(ios);
+    if (isStandalone) return;
 
     const dismissed = localStorage.getItem("pwa-install-dismissed");
-    const inCapacitor =
-      typeof window !== "undefined" &&
-      !!(window as Window & { Capacitor?: unknown }).Capacitor;
-    if (standalone || dismissed || inCapacitor) return;
+    if (dismissed) return;
 
-    const timer = setTimeout(() => setShow(true), 4000);
-
-    function onBeforeInstall(e: Event) {
-      e.preventDefault();
-      setDeferredPrompt(e as BeforeInstallPromptEvent);
-      setShow(true);
-    }
-
-    window.addEventListener("beforeinstallprompt", onBeforeInstall);
-    return () => {
-      clearTimeout(timer);
-      window.removeEventListener("beforeinstallprompt", onBeforeInstall);
-    };
-  }, []);
+    const timer = setTimeout(() => setShow(true), 3000);
+    return () => clearTimeout(timer);
+  }, [isStandalone]);
 
   if (!show || isStandalone) return null;
-
-  async function handleInstall() {
-    if (deferredPrompt) {
-      await deferredPrompt.prompt();
-      await deferredPrompt.userChoice;
-      setDeferredPrompt(null);
-      setShow(false);
-      return;
-    }
-    setShow(false);
-  }
 
   function dismiss() {
     localStorage.setItem("pwa-install-dismissed", "1");
@@ -72,9 +36,11 @@ export default function InstallAppBanner() {
           <div className="min-w-0 flex-1">
             <p className="font-semibold text-brand-900">Install App</p>
             <p className="mt-0.5 text-xs text-slate-600">
-              {isIOS
-                ? "Tap Share → Add to Home Screen for quick access"
-                : `Add ${business.shortName} to your home screen`}
+              {canPromptInstall
+                ? "One tap to add to your home screen"
+                : isIOS
+                  ? "Tap below — we’ll show you how"
+                  : `Add ${business.shortName} to your phone`}
             </p>
           </div>
           <button
@@ -86,20 +52,9 @@ export default function InstallAppBanner() {
             ✕
           </button>
         </div>
-        {!isIOS && deferredPrompt && (
-          <button
-            type="button"
-            onClick={handleInstall}
-            className="mt-3 w-full rounded-xl bg-brand-600 py-3 text-sm font-semibold text-white active:bg-brand-700"
-          >
-            Install Now
-          </button>
-        )}
-        {isIOS && (
-          <p className="mt-3 rounded-lg bg-slate-50 px-3 py-2 text-center text-xs text-slate-600">
-            Safari → <strong>Share</strong> → <strong>Add to Home Screen</strong>
-          </p>
-        )}
+        <div className="mt-3">
+          <InstallAppButton variant="primary" fullWidth className="!bg-brand-600 !text-white hover:!bg-brand-700" />
+        </div>
       </div>
     </div>
   );
