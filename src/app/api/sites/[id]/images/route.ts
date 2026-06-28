@@ -6,11 +6,12 @@ import { sites, siteImages } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import path from "node:path";
 import fs from "node:fs/promises";
+import { randomUUID } from "node:crypto";
 
-export async function POST(req: NextRequest, context: { params: { id: string } }) {
+export async function POST(req: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
     await requireAdmin();
-    const { id: idParam } = context.params;
+    const { id: idParam } = await context.params;
     const siteId = Number(idParam);
     if (!Number.isFinite(siteId)) {
       return Response.json({ error: "Invalid site id" }, { status: 400 });
@@ -29,7 +30,7 @@ export async function POST(req: NextRequest, context: { params: { id: string } }
       if (!(f instanceof File) || f.size === 0) continue;
 
       const ext = path.extname(f.name) || ".jpg";
-      const filename = `sites/${siteId}-${Date.now()}-${Math.random().toString(36).slice(2)}${ext}`;
+      const filename = `sites/${siteId}-${randomUUID()}${ext}`;
 
       let publicPath: string;
 
