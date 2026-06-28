@@ -8,10 +8,10 @@ import path from "node:path";
 import fs from "node:fs/promises";
 import { randomUUID } from "node:crypto";
 
-export async function POST(req: NextRequest, context: { params: Promise<{ id: string }> }) {
+export async function POST(req: NextRequest, context: { params: { id: string } }) {
   try {
     await requireAdmin();
-    const { id: idParam } = await context.params;
+    const { id: idParam } = context.params;
     const siteId = Number(idParam);
     if (!Number.isFinite(siteId)) {
       return Response.json({ error: "Invalid site id" }, { status: 400 });

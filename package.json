@@ -1,5 +1,5 @@
 {
-  "name": "nextjs-postgresql-template",
+  "name": "hi-tech-show-power",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -7,40 +7,30 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "mobile:icons": "node scripts/generate-icons.mjs",
-    "mobile:setup": "node scripts/generate-icons.mjs & cd mobile && npm install && npx cap add android 2>nul & npx cap add ios 2>nul & npx cap sync",
-    "mobile:sync": "cd mobile && npx cap sync",
-    "mobile:android": "cd mobile && npx cap sync && npx cap open android",
-    "mobile:ios": "cd mobile && npx cap sync && npx cap open ios",
-    "vapid:generate": "node -e \"const w=require('web-push');const k=w.generateVAPIDKeys();console.log('NEXT_PUBLIC_VAPID_PUBLIC_KEY='+k.publicKey);console.log('VAPID_PRIVATE_KEY='+k.privateKey);\""
+    "db:push": "drizzle-kit push:pg"
   },
   "dependencies": {
-    "@types/bcryptjs": "^2.4.6",
-    "@vercel/blob": "^2.5.0",
+    "@vercel/blob": "^0.23.2",
     "bcryptjs": "^2.4.3",
-    "dotenv": "17.3.1",
-    "drizzle-orm": "0.45.2",
-    "leaflet": "^1.9.4",
-    "next": "16.2.6",
-    "pg": "8.20.0",
-    "react": "19.2.6",
-    "react-dom": "19.2.6",
-    "web-push": "^3.6.7"
+    "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.30.10",
+    "next": "14.2.3",
+    "pg": "^8.11.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "4.1.17",
-    "@types/leaflet": "^1.9.21",
-    "@types/node": "22.19.15",
-    "@types/pg": "8.18.0",
-    "@types/react": "19.2.14",
-    "@types/react-dom": "19.2.3",
-    "@types/web-push": "^3.6.4",
-    "drizzle-kit": "0.31.10",
-    "eslint": "9.39.4",
-    "eslint-config-next": "16.2.6",
-    "postcss": "8.5.8",
-    "sharp": "^0.34.5",
-    "tailwindcss": "4.1.17",
-    "typescript": "5.9.3"
+    "@tailwindcss/forms": "^0.5.7",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^20.12.12",
+    "@types/pg": "^8.11.6",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "drizzle-kit": "^0.21.4",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "14.2.3",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.3",
+    "typescript": "^5.4.5"
   }
 }
