@@ -3,6 +3,8 @@
 import { usePathname } from "next/navigation";
 import { business } from "@/lib/business";
 
+type NavUser = { name: string; role: "admin" | "user" } | null;
+
 const titles: Record<string, string> = {
   "/": "Home",
   "/services": "Services",
@@ -13,10 +15,11 @@ const titles: Record<string, string> = {
   "/dashboard": "My Account",
 };
 
-export default function AppHeader() {
+export default function AppHeader({ user }: { user?: NavUser }) {
   const pathname = usePathname();
   const title = titles[pathname] || business.shortName;
   const showBack = pathname !== "/";
+  const showHotline = user?.role !== "admin";
 
   return (
     <header className="sticky top-0 z-50 border-b border-brand-700/20 bg-brand-600 text-white pt-[env(safe-area-inset-top)]">
@@ -41,12 +44,14 @@ export default function AppHeader() {
             <p className="truncate text-[11px] text-red-100">{business.serviceHours}</p>
           )}
         </div>
-        <a
-          href={`tel:${business.hotlineTel}`}
-          className="flex h-10 shrink-0 items-center gap-1.5 rounded-xl bg-accent-500 px-3 text-xs font-bold text-brand-900 active:bg-accent-400"
-        >
-          📞 Call
-        </a>
+        {showHotline && (
+          <a
+            href={`tel:${business.hotlineTel}`}
+            className="flex h-10 shrink-0 items-center gap-1.5 rounded-xl bg-accent-500 px-3 text-xs font-bold text-brand-900 active:bg-accent-400"
+          >
+            📞 Call
+          </a>
+        )}
       </div>
     </header>
   );

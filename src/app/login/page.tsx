@@ -23,7 +23,7 @@ export default function LoginPage() {
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || "Login failed");
-      router.replace("/dashboard");
+      router.replace(data.role === "admin" ? "/admin" : "/dashboard");
       router.refresh();
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Login failed");

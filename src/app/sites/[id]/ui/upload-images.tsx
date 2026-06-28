@@ -35,7 +35,7 @@ export default function UploadImages({ siteId }: { siteId: number }) {
     try {
       const fd = new FormData();
       Array.from(files).forEach((f) => fd.append("files", f));
-      const res = await fetch(`/api/sites/${siteId}/images`, { method: "POST", body: fd });
+      const res = await fetch(`/api/sites/${siteId}/images`, { method: "POST", body: fd, credentials: "include" });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || "Upload failed");
       setFiles(null);

@@ -33,7 +33,7 @@ export const viewport: Viewport = {
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
   const user = await getCurrentUser();
-  const navUser = user ? { name: user.name, role: user.role } : null;
+  const navUser = user ? { name: user.name, email: user.email, role: user.role } : null;
 
   return (
     <html lang="en">

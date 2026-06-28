@@ -15,13 +15,22 @@ const statuses = ["pending", "in_progress", "completed", "cancelled"];
 export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState("all");
 
   async function load() {
-    const res = await fetch("/api/orders");
-    const data = await res.json();
-    setOrders(data.orders || []);
-    setLoading(false);
+    setError(null);
+    try {
+      const res = await fetch("/api/orders", { credentials: "include" });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Failed to load orders");
+      setOrders(data.orders || []);
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Failed to load orders");
+      setOrders([]);
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => {
@@ -29,11 +38,17 @@ export default function AdminOrdersPage() {
   }, []);
 
   async function updateStatus(id: number, status: string) {
-    await fetch("/api/orders", {
+    const res = await fetch("/api/orders", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify({ id, status }),
     });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      setError(data.error || "Failed to update status");
+      return;
+    }
     load();
   }
 
@@ -57,6 +72,10 @@ export default function AdminOrdersPage() {
           </button>
         ))}
       </div>
+
+      {error && (
+        <p className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>
+      )}
 
       {loading ? (
         <p className="mt-8 text-center text-sm text-slate-500">Loading...</p>

@@ -19,15 +19,19 @@ export default function CreateSiteForm({ redirectTo }: { redirectTo?: string }) 
       const res = await fetch("/api/sites", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ name, location, description }),
       });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data.error || "Failed to create");
+      if (!res.ok) throw new Error(data.error || "Failed to create site");
       setName("");
       setLocation("");
       setDescription("");
-      if (redirectTo && data.id) {
-        router.push(`${redirectTo}/${data.id}`);
+      if (data.id) {
+        router.push(`${redirectTo ?? "/admin/sites"}/${data.id}`);
+      } else if (redirectTo) {
+        router.push(redirectTo);
+        router.refresh();
       } else {
         router.refresh();
       }

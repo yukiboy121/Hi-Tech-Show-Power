@@ -39,3 +39,12 @@ html.app-mode .app-main {
     font-size: 16px; /* prevents iOS zoom on focus */
   }
 }
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}

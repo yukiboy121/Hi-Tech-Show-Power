@@ -13,11 +13,13 @@ const serviceLabels: Record<string, string> = {
   other: "Other",
 };
 
-export default function AppContact() {
+type ContactUser = { name: string; email: string } | null;
+
+export default function AppContact({ user }: { user?: ContactUser }) {
   const searchParams = useSearchParams();
-  const [name, setName] = useState("");
+  const [name, setName] = useState(user?.name ?? "");
   const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(user?.email ?? "");
   const [service, setService] = useState("maintenance");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -37,13 +39,14 @@ export default function AppContact() {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ name, email, phone, service, message }),
       });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data.error || "Failed to send");
+      if (!res.ok) throw new Error(data.error || "Failed to send request");
       setSuccess(true);
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : "Failed");
+      setError(e instanceof Error ? e.message : "Failed to send request");
     } finally {
       setLoading(false);
     }
@@ -67,9 +70,11 @@ export default function AppContact() {
           type="button"
           onClick={() => {
             setSuccess(false);
-            setName("");
-            setPhone("");
-            setEmail("");
+            if (!user) {
+              setName("");
+              setPhone("");
+              setEmail("");
+            }
             setMessage("");
           }}
           className="mt-3 text-sm font-medium text-brand-600"
@@ -83,7 +88,7 @@ export default function AppContact() {
   return (
     <div className="space-y-4">
       <div className="rounded-2xl bg-accent-500/20 px-4 py-3 text-sm text-brand-900">
-        <strong>Tip:</strong> Fill this form and we will call you back. For urgent breakdowns, tap Call above.
+        <strong>Tip:</strong> Fill this form and we will call you back. For urgent breakdowns, use the emergency hotline in the More menu.
       </div>
 
       <form onSubmit={onSubmit} className="space-y-4 rounded-2xl bg-white p-4 shadow-sm">

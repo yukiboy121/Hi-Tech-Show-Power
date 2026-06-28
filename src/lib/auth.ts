@@ -83,3 +83,15 @@ export async function requireAdmin() {
   }
   return u;
 }
+
+export function authErrorResponse(error: unknown) {
+  if (error instanceof Error) {
+    if (error.message === "UNAUTHORIZED") {
+      return Response.json({ error: "Not authenticated" }, { status: 401 });
+    }
+    if (error.message === "FORBIDDEN") {
+      return Response.json({ error: "Access denied" }, { status: 403 });
+    }
+  }
+  return null;
+}

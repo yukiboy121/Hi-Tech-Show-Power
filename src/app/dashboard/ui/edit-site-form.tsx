@@ -57,6 +57,7 @@ export default function EditSiteForm({
       const res = await fetch(`/api/sites/${siteId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ name, location, latitude, longitude, description }),
       });
       const data = await res.json().catch(() => ({}));

@@ -8,7 +8,7 @@ import InstallAppBanner from "@/components/install-app-banner";
 import AppShell from "@/components/app/app-shell";
 import { usePwaInstall } from "@/components/pwa-install-provider";
 
-type NavUser = { name: string; role: "admin" | "user" } | null;
+type NavUser = { name: string; email?: string; role: "admin" | "user" } | null;
 
 const BARE_ROUTES = ["/admin"];
 
