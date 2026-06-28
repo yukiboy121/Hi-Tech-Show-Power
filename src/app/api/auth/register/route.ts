@@ -24,12 +24,16 @@ export async function POST(req: NextRequest) {
     const anyUser = await db.select({ id: users.id }).from(users).limit(1);
     const role = anyUser.length === 0 ? ("admin" as const) : ("user" as const);
 
-    const [inserted] = await db
+    const insertedRows = await db
       .insert(users)
       .values({ name, email: email.toLowerCase(), passwordHash, role })
       .returning({ id: users.id });
 
-    await createSession(inserted.id);
+    if (insertedRows.length === 0) {
+      throw new Error("User registration failed, please try again.");
+    }
+
+    await createSession(insertedRows[0].id);
     return Response.json({ ok: true });
   } catch (e) {
     console.error(e);
