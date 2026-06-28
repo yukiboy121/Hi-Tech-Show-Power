@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { business } from "@/lib/business";
+import AppDownloadLinks from "@/components/app-download-links";
 
 export default function SiteFooter() {
   return (
@@ -13,6 +14,10 @@ export default function SiteFooter() {
           <p className="mt-3 max-w-md text-sm leading-relaxed text-slate-400">
             {business.description}
           </p>
+          <div className="mt-5">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500">Mobile App</p>
+            <AppDownloadLinks layout="row" />
+          </div>
         </div>
         <div>
           <p className="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-500">Quick Links</p>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { business, mainServices } from "@/lib/business";
 import GeneratorGallery from "@/components/generator-gallery";
+import AppDownloadLinks from "@/components/app-download-links";
 
 export default function HomePage() {
   return (
@@ -97,6 +98,19 @@ export default function HomePage() {
       </section>
 
       <section className="bg-brand-900 px-4 py-14 text-white">
+        <div className="mx-auto flex max-w-6xl flex-col items-center gap-8 text-center lg:flex-row lg:text-left">
+          <div className="flex-1">
+            <p className="text-xs font-bold uppercase tracking-widest text-accent-400">Mobile App</p>
+            <h2 className="mt-2 text-2xl font-bold sm:text-3xl">Download Our App</h2>
+            <p className="mt-3 max-w-lg text-red-200">
+              Get quick access to our 24-hour hotline, service requests, and updates — on iOS and Android.
+            </p>
+          </div>
+          <AppDownloadLinks layout="column" className="w-full shrink-0 sm:w-auto" />
+        </div>
+      </section>
+
+      <section className="bg-brand-900 px-4 py-14 text-white border-t border-white/10">
         <div className="mx-auto flex max-w-6xl flex-col items-center gap-6 text-center sm:flex-row sm:text-left">
           <div className="flex-1">
             <h2 className="text-2xl font-bold sm:text-3xl">Need urgent help?</h2>

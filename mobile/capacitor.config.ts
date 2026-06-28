@@ -7,7 +7,7 @@ import type { CapacitorConfig } from "@capacitor/cli";
  * For local dev on Android emulator use: http://10.0.2.2:3000
  * For local dev on device use your PC IP: http://192.168.x.x:3000
  */
-const serverUrl = process.env.CAPACITOR_SERVER_URL ?? "https://YOUR_VERCEL_URL.vercel.app";
+const serverUrl = process.env.CAPACITOR_SERVER_URL ?? "https://hi-tech-show-power.vercel.app";
 
 const config: CapacitorConfig = {
   appId: "lk.hitechshowpower.app",

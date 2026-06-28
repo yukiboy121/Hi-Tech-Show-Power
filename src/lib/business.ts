@@ -11,6 +11,12 @@ export const business = {
   email: "hitechshow.p@gmail.com",
   serviceHours: "24 Hour Service",
   location: "Sri Lanka — Island-wide mobile service",
+  appDownloads: {
+    /** Set NEXT_PUBLIC_IOS_APP_URL when live on the App Store */
+    ios: process.env.NEXT_PUBLIC_IOS_APP_URL ?? "",
+    /** Set NEXT_PUBLIC_ANDROID_APP_URL when live on Google Play */
+    android: process.env.NEXT_PUBLIC_ANDROID_APP_URL ?? "",
+  },
 } as const;
 
 export const mainServices = [
