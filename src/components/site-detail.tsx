@@ -5,6 +5,7 @@ import { notFound, redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
 import Link from "next/link";
 import UploadImages from "@/app/sites/[id]/ui/upload-images";
+import EditSiteForm from "@/app/dashboard/ui/edit-site-form";
 
 export const dynamic = "force-dynamic";
 
@@ -48,6 +49,20 @@ export async function SiteDetail({ siteId, backHref, backLabel }: Props) {
           </span>
         </div>
       </div>
+
+      {isAdmin && (
+        <div className="mt-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
+          <h2 className="mb-3 font-semibold text-brand-900">Edit Site Details</h2>
+          <EditSiteForm
+            siteId={siteId}
+            initial={{
+              name: site.name,
+              location: site.location ?? "",
+              description: site.description ?? "",
+            }}
+          />
+        </div>
+      )}
 
       {isAdmin && (
         <div className="mt-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
