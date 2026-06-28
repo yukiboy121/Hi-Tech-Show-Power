@@ -20,13 +20,9 @@ export async function POST(req: NextRequest) {
 
     const passwordHash = await hashPassword(password);
 
-    // First user becomes admin
-    const anyUser = await db.select({ id: users.id }).from(users).limit(1);
-    const role = anyUser.length === 0 ? ("admin" as const) : ("user" as const);
-
     const [inserted] = await db
       .insert(users)
-      .values({ name, email: email.toLowerCase(), passwordHash, role })
+      .values({ name, email: email.toLowerCase(), passwordHash, role: "user" })
       .returning({ id: users.id });
 
     await createSession(inserted.id);

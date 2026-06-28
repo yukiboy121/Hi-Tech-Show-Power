@@ -1,1 +1,21 @@
 @import "tailwindcss";
+
+@theme {
+  --color-brand-50: #fef2f2;
+  --color-brand-100: #fee2e2;
+  --color-brand-500: #ef4444;
+  --color-brand-600: #d32f2f;
+  --color-brand-700: #b91c1c;
+  --color-brand-900: #1a1a1a;
+  --color-accent-400: #fde047;
+  --color-accent-500: #facc15;
+  --color-accent-600: #eab308;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
