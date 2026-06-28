@@ -20,12 +20,14 @@ export async function POST(req: NextRequest) {
 
     const passwordHash = await hashPassword(password);
 
-    const [inserted] = await db
+    const insertedRows = await db
       .insert(users)
       .values({ name, email: email.toLowerCase(), passwordHash, role: "user" })
       .returning({ id: users.id });
 
-    await createSession(inserted.id);
+    if (!insertedRows[0]) throw new Error("Registration failed, user not created.");
+
+    await createSession(insertedRows[0].id);
     return Response.json({ ok: true });
   } catch (e) {
     console.error(e);
