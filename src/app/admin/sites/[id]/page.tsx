@@ -3,7 +3,7 @@ import { SiteDetail } from "@/components/site-detail";
 
 export const dynamic = "force-dynamic";
 
-export default async function SitePage({ params }: { params: Promise<{ id: string }> }) {
+export default async function AdminSiteDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id: idParam } = await params;
   const siteId = Number(idParam);
   if (!Number.isFinite(siteId)) notFound();
@@ -11,8 +11,8 @@ export default async function SitePage({ params }: { params: Promise<{ id: strin
   return (
     <SiteDetail
       siteId={siteId}
-      backHref="/dashboard"
-      backLabel="Back to Dashboard"
+      backHref="/admin/sites"
+      backLabel="Back to Sites"
     />
   );
 }

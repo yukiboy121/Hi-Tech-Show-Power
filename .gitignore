@@ -18,3 +18,8 @@ npm-debug.log*
 # os
 .DS_Store
 Thumbs.db
+
+# mobile (Capacitor)
+mobile/node_modules/
+mobile/android/
+mobile/ios/

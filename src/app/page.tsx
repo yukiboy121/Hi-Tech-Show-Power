@@ -1,6 +1,6 @@
 import Link from "next/link";
-import Image from "next/image";
 import { business, mainServices } from "@/lib/business";
+import GeneratorGallery from "@/components/generator-gallery";
 
 export default function HomePage() {
   return (
@@ -11,51 +11,37 @@ export default function HomePage() {
           <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-brand-600 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-white ring-2 ring-accent-500">
             🕐 {business.serviceHours}
           </div>
-          <div className="grid items-center gap-8 lg:grid-cols-2">
-            <div>
-              <p className="mb-2 text-sm font-medium uppercase tracking-widest text-accent-400">
-                Sri Lanka · Power Engineering
-              </p>
-              <h1 className="text-[clamp(1.75rem,6vw,3rem)] font-bold uppercase leading-tight text-red-100">
-                Generator Maintenance
-              </h1>
-              <p className="mt-3 text-base font-semibold uppercase tracking-wide text-white sm:text-lg">
-                Electrical Installations &amp; Air Conditioners
-              </p>
-              <p className="mt-4 max-w-lg text-sm leading-relaxed text-red-100 sm:text-base">
-                {business.description}
-              </p>
-              <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-                <a
-                  href={`tel:${business.hotlineTel}`}
-                  className="rounded-xl bg-accent-500 px-6 py-3.5 text-center text-sm font-bold text-brand-900 hover:bg-accent-400"
-                >
-                  📞 Hot Line: {business.hotline}
-                </a>
-                <a
-                  href={`tel:${business.mobileTel}`}
-                  className="rounded-xl border border-white/40 px-6 py-3.5 text-center text-sm font-semibold text-white hover:bg-white/10"
-                >
-                  Mobile: {business.mobile}
-                </a>
-                <Link
-                  href="/contact"
-                  className="rounded-xl border border-white/30 px-6 py-3.5 text-center text-sm font-medium text-white hover:bg-white/10"
-                >
-                  Request Service
-                </Link>
-              </div>
-            </div>
-            <div className="overflow-hidden rounded-2xl border-2 border-white/20 shadow-2xl">
-              <Image
-                src="/banner.png"
-                alt={`${business.name} - Generator Maintenance, Electrical Installations & Air Conditioners`}
-                width={800}
-                height={450}
-                className="h-auto w-full object-cover"
-                priority
-              />
-            </div>
+          <p className="mb-2 text-sm font-medium uppercase tracking-widest text-accent-400">
+            Sri Lanka · Power Engineering
+          </p>
+          <h1 className="max-w-2xl text-[clamp(1.75rem,7vw,3rem)] font-bold uppercase leading-tight text-red-100">
+            Generator Maintenance
+          </h1>
+          <p className="mt-3 max-w-xl text-base font-semibold uppercase tracking-wide text-white sm:text-lg">
+            Electrical Installations &amp; Air Conditioners
+          </p>
+          <p className="mt-4 max-w-lg text-sm leading-relaxed text-red-100 sm:text-base">
+            {business.description}
+          </p>
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <a
+              href={`tel:${business.hotlineTel}`}
+              className="rounded-xl bg-accent-500 px-6 py-4 text-center text-sm font-bold text-brand-900 active:bg-accent-400"
+            >
+              📞 Hot Line: {business.hotline}
+            </a>
+            <a
+              href={`tel:${business.mobileTel}`}
+              className="rounded-xl border border-white/40 px-6 py-4 text-center text-sm font-semibold text-white active:bg-white/10"
+            >
+              Mobile: {business.mobile}
+            </a>
+            <Link
+              href="/contact"
+              className="rounded-xl border border-white/30 px-6 py-4 text-center text-sm font-medium text-white active:bg-white/10"
+            >
+              Request Service
+            </Link>
           </div>
         </div>
       </section>
@@ -76,7 +62,17 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 py-14">
+      <section className="mx-auto max-w-6xl px-4 py-12 sm:py-14">
+        <div className="mb-6 text-center sm:mb-8">
+          <h2 className="text-2xl font-bold text-brand-900 sm:text-3xl">Our Generators</h2>
+          <p className="mt-2 text-sm text-slate-600 sm:text-base">
+            We service and repair all types of generators
+          </p>
+        </div>
+        <GeneratorGallery />
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 pb-14">
         <div className="mb-8 text-center">
           <h2 className="text-2xl font-bold text-brand-900 sm:text-3xl">Our Services</h2>
           <p className="mt-2 text-slate-600">{business.tagline}</p>
@@ -85,7 +81,7 @@ export default function HomePage() {
           {mainServices.map((s) => (
             <div
               key={s.title}
-              className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
+              className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-shadow active:scale-[0.99] hover:shadow-md"
             >
               <span className="text-3xl">{s.icon}</span>
               <h3 className="mt-3 font-semibold text-brand-900">{s.title}</h3>
@@ -108,16 +104,16 @@ export default function HomePage() {
               Call our 24-hour hotline. Our engineers are ready to restore your power, electrical systems, or AC units.
             </p>
           </div>
-          <div className="flex shrink-0 flex-col gap-3">
+          <div className="flex w-full shrink-0 flex-col gap-3 sm:w-auto">
             <a
               href={`tel:${business.hotlineTel}`}
-              className="rounded-xl bg-accent-500 px-8 py-4 text-center text-lg font-bold text-brand-900 hover:bg-accent-400"
+              className="rounded-xl bg-accent-500 px-8 py-4 text-center text-lg font-bold text-brand-900 active:bg-accent-400"
             >
               📞 {business.hotline}
             </a>
             <a
               href={`tel:${business.mobileTel}`}
-              className="rounded-xl border border-white/30 px-8 py-3 text-center text-sm text-white hover:bg-white/10"
+              className="rounded-xl border border-white/30 px-8 py-3 text-center text-sm text-white active:bg-white/10"
             >
               Mobile: {business.mobile}
             </a>

@@ -39,3 +39,31 @@ export const mainServices = [
     features: ["24/7 hotline", "Fast response", "On-site service", "All districts"],
   },
 ] as const;
+
+/** Drop your photos into public/generators/ with these filenames */
+export const generatorShowcase = [
+  {
+    title: "Diesel Generators",
+    subtitle: "Industrial & standby units",
+    image: "/generators/diesel.jpg",
+    gradient: "bg-gradient-to-br from-slate-700 to-slate-900",
+  },
+  {
+    title: "Perkins Units",
+    subtitle: "Repair & maintenance",
+    image: "/generators/perkins.jpg",
+    gradient: "bg-gradient-to-br from-blue-700 to-blue-900",
+  },
+  {
+    title: "Portable Generators",
+    subtitle: "Home & shop power",
+    image: "/generators/portable.jpg",
+    gradient: "bg-gradient-to-br from-amber-600 to-orange-800",
+  },
+  {
+    title: "Control Panels",
+    subtitle: "Electrical installations",
+    image: "/generators/panel.jpg",
+    gradient: "bg-gradient-to-br from-red-700 to-red-900",
+  },
+] as const;

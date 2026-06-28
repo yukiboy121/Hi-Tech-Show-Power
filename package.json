@@ -6,7 +6,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "mobile:icons": "node scripts/generate-icons.mjs",
+    "mobile:setup": "node scripts/generate-icons.mjs & cd mobile && npm install && npx cap add android 2>nul & npx cap add ios 2>nul & npx cap sync",
+    "mobile:sync": "cd mobile && npx cap sync",
+    "mobile:android": "cd mobile && npx cap sync && npx cap open android",
+    "mobile:ios": "cd mobile && npx cap sync && npx cap open ios"
   },
   "dependencies": {
     "@types/bcryptjs": "^2.4.6",
@@ -28,6 +33,7 @@
     "eslint": "9.39.4",
     "eslint-config-next": "16.2.6",
     "postcss": "8.5.8",
+    "sharp": "^0.34.5",
     "tailwindcss": "4.1.17",
     "typescript": "5.9.3"
   }

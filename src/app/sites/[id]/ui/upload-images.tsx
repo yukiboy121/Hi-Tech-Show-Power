@@ -1,10 +1,23 @@
 "use client";
+
 import { useState } from "react";
 
 export default function UploadImages({ siteId }: { siteId: number }) {
   const [files, setFiles] = useState<FileList | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [preview, setPreview] = useState<string[]>([]);
+
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const selected = e.target.files;
+    setFiles(selected);
+    if (selected) {
+      const urls = Array.from(selected).map((f) => URL.createObjectURL(f));
+      setPreview(urls);
+    } else {
+      setPreview([]);
+    }
+  }
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -21,29 +34,46 @@ export default function UploadImages({ siteId }: { siteId: number }) {
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || "Upload failed");
       setFiles(null);
-      // refresh
+      setPreview([]);
       window.location.reload();
-    } catch (e: any) {
-      setError(e.message || "Upload failed");
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Upload failed");
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col gap-3 sm:flex-row sm:items-center">
-      <input
-        type="file"
-        multiple
-        accept="image/*"
-        onChange={(e) => setFiles(e.target.files)}
-        className="block w-full text-sm file:mr-3 file:rounded-md file:border-0 file:bg-slate-900 file:px-3 file:py-2 file:text-white"
-      />
+    <form onSubmit={onSubmit} className="space-y-4">
+      <label className="flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 px-4 py-8 transition-colors hover:border-brand-400 hover:bg-brand-50/50 active:bg-brand-50">
+        <span className="text-3xl">📷</span>
+        <span className="mt-2 text-sm font-medium text-slate-700">Tap to select photos</span>
+        <span className="mt-1 text-xs text-slate-500">JPG, PNG — multiple allowed</span>
+        <input
+          type="file"
+          multiple
+          accept="image/*"
+          onChange={handleFileChange}
+          className="sr-only"
+        />
+      </label>
+
+      {preview.length > 0 && (
+        <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
+          {preview.map((url, i) => (
+            <div key={url} className="aspect-square overflow-hidden rounded-lg border">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={url} alt={`Preview ${i + 1}`} className="h-full w-full object-cover" />
+            </div>
+          ))}
+        </div>
+      )}
+
       <button
-        disabled={loading}
-        className="rounded-md bg-slate-900 px-4 py-2 text-white disabled:opacity-60"
+        disabled={loading || !files?.length}
+        className="w-full rounded-xl bg-brand-600 px-4 py-3.5 text-sm font-semibold text-white hover:bg-brand-700 disabled:opacity-50 sm:w-auto"
       >
-        {loading ? "Uploading..." : "Upload"}
+        {loading ? "Uploading..." : `Upload ${files?.length || ""} photo${files && files.length > 1 ? "s" : ""}`}
       </button>
       {error && <p className="text-sm text-red-600">{error}</p>}
     </form>

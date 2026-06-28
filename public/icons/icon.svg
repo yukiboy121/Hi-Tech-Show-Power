@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <rect width="512" height="512" rx="96" fill="#d32f2f"/>
+  <rect x="32" y="32" width="448" height="448" rx="72" fill="#b91c1c"/>
+  <text x="256" y="220" text-anchor="middle" font-family="system-ui,sans-serif" font-size="120" font-weight="bold" fill="#facc15">HP</text>
+  <text x="256" y="310" text-anchor="middle" font-family="system-ui,sans-serif" font-size="36" font-weight="600" fill="white">24 HR</text>
+  <text x="256" y="360" text-anchor="middle" font-family="system-ui,sans-serif" font-size="28" fill="#fecaca">SERVICE</text>
+  <path d="M180 400h152" stroke="#facc15" stroke-width="6" stroke-linecap="round"/>
+</svg>
