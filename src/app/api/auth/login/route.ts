@@ -13,12 +13,6 @@ export async function POST(req: NextRequest) {
       return Response.json({ error: "Missing fields" }, { status: 400 });
     }
 
-    // Basic email format validation to avoid unnecessary DB queries and prevent email enumeration
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return Response.json({ error: "Invalid credentials" }, { status: 401 });
-    }
-
     const rows = await db.select().from(users).where(eq(users.email, email.toLowerCase())).limit(1);
     if (!rows.length) {
       return Response.json({ error: "Invalid credentials" }, { status: 401 });

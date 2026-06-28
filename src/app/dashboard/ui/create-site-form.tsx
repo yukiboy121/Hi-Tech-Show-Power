@@ -1,9 +1,7 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 export default function CreateSiteForm() {
-  const router = useRouter();
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
@@ -25,7 +23,8 @@ export default function CreateSiteForm() {
       setName("");
       setLocation("");
       setDescription("");
-      router.refresh();
+      // refresh page data
+      window.location.reload();
     } catch (e: any) {
       setError(e.message || "Failed");
     } finally {
