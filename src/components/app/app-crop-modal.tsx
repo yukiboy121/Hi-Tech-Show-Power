@@ -134,7 +134,7 @@ export default function AppCropModal({ src, onCancel, onDone }: CropModalProps) 
 
       {/* --- Top navigation bar --- */}
       <div
-        className="flex items-center justify-between border-b border-white/10 px-4 py-3"
+        className="flex items-center justify-between px-4 py-2"
         style={{
           background: "rgba(0,0,0,0.3)",
           backdropFilter: "blur(30px)",
@@ -148,16 +148,13 @@ export default function AppCropModal({ src, onCancel, onDone }: CropModalProps) 
           type="button"
           onClick={handleClose}
           disabled={saving}
-          className="text-[17px] font-normal tracking-[-0.02em] text-white/70 active:text-white transition-colors disabled:opacity-30"
+          className="text-[15px] font-normal tracking-[-0.02em] text-white/70 active:text-white transition-colors disabled:opacity-30"
         >
           Cancel
         </button>
-        <div className="flex items-center gap-2">
-          <span
-            className="h-2 w-2 rounded-full bg-brand-500"
-            style={{ boxShadow: "0 0 6px rgba(211,47,47,0.5)" }}
-          />
-          <p className="text-[17px] font-semibold tracking-[-0.02em] text-white/90">
+        <div className="flex items-center gap-1.5">
+          <span className="h-1.5 w-1.5 rounded-full bg-brand-500" style={{ boxShadow: "0 0 4px rgba(211,47,47,0.5)" }} />
+          <p className="text-[15px] font-semibold tracking-[-0.02em] text-white/90">
             Crop Photo
           </p>
         </div>
@@ -165,11 +162,11 @@ export default function AppCropModal({ src, onCancel, onDone }: CropModalProps) 
           type="button"
           onClick={handleDone}
           disabled={saving || !croppedAreaPixels}
-          className="text-[17px] font-semibold tracking-[-0.02em] text-brand-300 active:text-brand-200 transition-colors disabled:opacity-30"
+          className="text-[15px] font-semibold tracking-[-0.02em] text-brand-300 active:text-brand-200 transition-colors disabled:opacity-30"
         >
           {saving ? (
             <span className="flex items-center gap-1.5">
-              <span className="h-3.5 w-3.5 animate-spin rounded-full border-[2px] border-brand-300 border-t-transparent" />
+              <span className="h-3 w-3 animate-spin rounded-full border-[2px] border-brand-300 border-t-transparent" />
               Saving
             </span>
           ) : (
@@ -211,7 +208,7 @@ export default function AppCropModal({ src, onCancel, onDone }: CropModalProps) 
 
       {/* --- Bottom toolbar --- */}
       <div
-        className="flex items-center justify-center gap-10 border-t border-white/10 px-6 py-5"
+        className="flex items-center justify-center gap-8 border-t border-white/10 px-4 py-2.5"
         style={{
           background: "rgba(0,0,0,0.35)",
           backdropFilter: "blur(30px)",
@@ -225,55 +222,40 @@ export default function AppCropModal({ src, onCancel, onDone }: CropModalProps) 
         <button
           type="button"
           onClick={handleReset}
-          className="flex flex-col items-center gap-1.5 text-white/50 active:text-white/90 transition-colors"
+          className="flex flex-col items-center gap-1 text-white/50 active:text-white/90 transition-colors"
           aria-label="Reset crop"
         >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="1 4 1 10 7 10" />
             <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
           </svg>
-          <span className="text-[10px] font-medium tracking-[0.02em] uppercase">Reset</span>
+          <span className="text-[9px] font-medium tracking-[0.04em] uppercase">Reset</span>
         </button>
 
         {/* Aspect ratio indicator */}
-        <div className="flex flex-col items-center gap-1.5">
-          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10">
-            <span className="text-[13px] font-bold tracking-[-0.02em] text-white">1:1</span>
+        <div className="flex flex-col items-center gap-1">
+          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10">
+            <span className="text-[12px] font-bold tracking-[-0.02em] text-white">1:1</span>
           </div>
-          <span className="text-[10px] font-medium tracking-[0.02em] uppercase text-white/40">Square</span>
+          <span className="text-[9px] font-medium tracking-[0.04em] uppercase text-white/40">Square</span>
         </div>
 
         {/* Zoom toggle */}
         <button
           type="button"
           onClick={() => setZoom((z) => (z > 1.5 ? 1 : 2.5))}
-          className="flex flex-col items-center gap-1.5 text-white/50 active:text-white/90 transition-colors"
+          className="flex flex-col items-center gap-1 text-white/50 active:text-white/90 transition-colors"
           aria-label="Toggle zoom"
         >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="11" cy="11" r="8" />
             <line x1="21" y1="21" x2="16.65" y2="16.65" />
             <line x1="11" y1="8" x2="11" y2="14" />
             <line x1="8" y1="11" x2="14" y2="11" />
           </svg>
-          <span className="text-[10px] font-medium tracking-[0.02em] uppercase">Zoom</span>
+          <span className="text-[9px] font-medium tracking-[0.04em] uppercase">Zoom</span>
         </button>
       </div>
-
-      {/* Hint text */}
-      {!reduced && (
-        <p
-          className="py-2 text-center text-[12px] tracking-[-0.01em] text-white/30"
-          style={{
-            background: "rgba(0,0,0,0.25)",
-            ...anim,
-            animationDelay: "0.2s",
-            ...closingAnim,
-          }}
-        >
-          Pinch to zoom · Drag to move · Double-tap to zoom
-        </p>
-      )}
     </div>
   );
 }
