@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import Cropper, { type Area } from "react-easy-crop";
+import AppCropModal from "@/components/app/app-crop-modal";
 import { IconCamera, IconCheck } from "@/components/icons";
 
 type UserProfile = {
@@ -13,41 +13,6 @@ type UserProfile = {
   avatarUrl: string | null;
   role: "admin" | "user";
 };
-
-function createImage(url: string): Promise<HTMLImageElement> {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.crossOrigin = "anonymous";
-    img.src = url;
-    img.onload = () => resolve(img);
-    img.onerror = () => reject(new Error("Failed to load image"));
-  });
-}
-
-async function getCroppedBlob(imageSrc: string, pixelCrop: Area): Promise<Blob> {
-  const img = await createImage(imageSrc);
-  const canvas = document.createElement("canvas");
-  const ctx = canvas.getContext("2d")!;
-  canvas.width = pixelCrop.width;
-  canvas.height = pixelCrop.height;
-  ctx.drawImage(
-    img,
-    pixelCrop.x,
-    pixelCrop.y,
-    pixelCrop.width,
-    pixelCrop.height,
-    0,
-    0,
-    pixelCrop.width,
-    pixelCrop.height
-  );
-  return new Promise((resolve, reject) => {
-    canvas.toBlob((blob) => {
-      if (blob) resolve(blob);
-      else reject(new Error("Canvas toBlob failed"));
-    }, "image/jpeg", 0.9);
-  });
-}
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -63,9 +28,6 @@ export default function SettingsPage() {
 
   const [cropOpen, setCropOpen] = useState(false);
   const [cropSrc, setCropSrc] = useState<string | null>(null);
-  const [crop, setCrop] = useState({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(1);
-  const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
 
   async function loadProfile() {
     const res = await fetch("/api/user/profile");
@@ -86,31 +48,23 @@ export default function SettingsPage() {
     loadProfile();
   }, []);
 
-  const onCropComplete = useCallback((_: Area, croppedPixels: Area) => {
-    setCroppedAreaPixels(croppedPixels);
-  }, []);
-
   function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
     reader.onload = () => {
       setCropSrc(reader.result as string);
-      setCrop({ x: 0, y: 0 });
-      setZoom(1);
       setCropOpen(true);
     };
     reader.readAsDataURL(file);
     e.target.value = "";
   }
 
-  async function handleCropConfirm() {
-    if (!cropSrc || !croppedAreaPixels) return;
+  async function handleCropDone(blob: Blob) {
     setUploading(true);
     setError(null);
     setSuccess(null);
     try {
-      const blob = await getCroppedBlob(cropSrc, croppedAreaPixels);
       const fd = new FormData();
       fd.append("avatar", blob, "avatar.jpg");
       const res = await fetch("/api/user/avatar", { method: "POST", body: fd });
@@ -129,6 +83,11 @@ export default function SettingsPage() {
     } finally {
       setUploading(false);
     }
+  }
+
+  function handleCropCancel() {
+    setCropOpen(false);
+    setCropSrc(null);
   }
 
   async function handleSave() {
@@ -228,49 +187,12 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      {/* Crop modal — iOS Photos style */}
       {cropOpen && cropSrc && (
-        <div className="fixed inset-0 z-[9998] flex flex-col bg-black pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
-          <div className="flex items-center justify-between px-4 py-2.5">
-            <button
-              type="button"
-              onClick={() => { setCropOpen(false); setCropSrc(null); }}
-              className="text-[17px] font-normal text-white/80 active:text-white transition-colors"
-              disabled={uploading}
-            >
-              Cancel
-            </button>
-            <p className="text-[15px] font-semibold text-white/80 tracking-[-0.02em]">1:1</p>
-            <button
-              type="button"
-              onClick={handleCropConfirm}
-              disabled={uploading}
-              className="text-[17px] font-semibold text-brand-300 active:text-brand-200 transition-colors disabled:opacity-40"
-            >
-              {uploading ? "Saving..." : "Done"}
-            </button>
-          </div>
-          <div className="relative flex-1">
-            <Cropper
-              image={cropSrc}
-              crop={crop}
-              zoom={zoom}
-              aspect={1}
-              cropShape="round"
-              showGrid={false}
-              onCropChange={setCrop}
-              onZoomChange={setZoom}
-              onCropComplete={onCropComplete}
-              classes={{
-                containerClassName: "!bg-black",
-                cropAreaClassName: "!border-2 !border-white !shadow-[0_0_0_9999px_rgba(0,0,0,0.7)]",
-              }}
-            />
-          </div>
-          <p className="py-3 text-center text-[13px] tracking-[-0.01em] text-white/40">
-            Pinch to zoom · Drag to reposition
-          </p>
-        </div>
+        <AppCropModal
+          src={cropSrc}
+          onCancel={handleCropCancel}
+          onDone={handleCropDone}
+        />
       )}
 
       <div className="mt-8 space-y-5">
