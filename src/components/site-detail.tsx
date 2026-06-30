@@ -6,7 +6,7 @@ import { getCurrentUser } from "@/lib/auth";
 import Link from "next/link";
 import SiteDetailAdmin from "@/components/site-detail-admin";
 import SiteGallery from "@/components/site-gallery";
-import { IconCamera, IconChevronLeft, IconMapPin } from "@/components/icons";
+import { IconCamera, IconChevronLeft, IconMapPin, IconNavigation, IconMap } from "@/components/icons";
 
 export const dynamic = "force-dynamic";
 
@@ -69,6 +69,40 @@ export async function SiteDetail({ siteId, backHref, backLabel }: Props) {
               {imgs.length}
             </span>
           </div>
+
+          {site.latitude && site.longitude && (
+            <div className="mt-3 flex flex-wrap gap-2">
+              <a
+                href={`https://www.google.com/maps?q=${site.latitude},${site.longitude}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-700 hover:border-brand-300 hover:text-brand-600"
+              >
+                <IconMap className="h-4 w-4" />
+                Open in Google Maps
+              </a>
+              <a
+                href={`https://www.google.com/maps/dir/?api=1&destination=${site.latitude},${site.longitude}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-700 hover:border-brand-300 hover:text-brand-600"
+              >
+                <IconNavigation className="h-4 w-4" />
+                Get Directions
+              </a>
+            </div>
+          )}
+
+          {site.latitude && site.longitude && (
+            <div className="mt-3 overflow-hidden rounded-xl border border-slate-200">
+              <iframe
+                title="Site location map"
+                src={`https://www.openstreetmap.org/export/embed.html?bbox=${Number(site.longitude) - 0.02}%2C${Number(site.latitude) - 0.02}%2C${Number(site.longitude) + 0.02}%2C${Number(site.latitude) + 0.02}&layer=mapnik&marker=${site.latitude}%2C${site.longitude}`}
+                className="h-48 w-full border-0"
+                loading="lazy"
+              />
+            </div>
+          )}
         </div>
       )}
 

@@ -3,6 +3,7 @@ import { sites, siteImages } from "@/db/schema";
 import { authErrorResponse, requireAdmin } from "@/lib/auth";
 import { eq } from "drizzle-orm";
 import { NextRequest } from "next/server";
+import { del as blobDel } from "@vercel/blob";
 
 export async function GET(req: NextRequest, context: { params: { id: string } }) {
   try {
@@ -67,6 +68,35 @@ export async function PATCH(req: NextRequest, context: { params: { id: string } 
     }
 
     await db.update(sites).set(updates).where(eq(sites.id, siteId));
+    return Response.json({ ok: true });
+  } catch (error) {
+    const authRes = authErrorResponse(error);
+    if (authRes) return authRes;
+    console.error(error);
+    return Response.json({ error: "Server error" }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: NextRequest, context: { params: { id: string } }) {
+  try {
+    await requireAdmin();
+    const siteId = Number(context.params.id);
+    if (!Number.isFinite(siteId)) {
+      return Response.json({ error: "Invalid site ID" }, { status: 400 });
+    }
+
+    const images = await db.select().from(siteImages).where(eq(siteImages.siteId, siteId));
+    const blobUrls = images
+      .map((im) => im.path)
+      .filter((p): p is string => !!p && p.startsWith("http"));
+
+    if (blobUrls.length > 0) {
+      await blobDel(blobUrls).catch(() => {});
+    }
+
+    await db.delete(siteImages).where(eq(siteImages.siteId, siteId));
+    await db.delete(sites).where(eq(sites.id, siteId));
+
     return Response.json({ ok: true });
   } catch (error) {
     const authRes = authErrorResponse(error);

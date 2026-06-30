@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
-import { IconCamera, IconEdit, IconMapPin } from "@/components/icons";
+import { IconCamera, IconEdit, IconMapPin, IconTrash, IconNavigation, IconMap } from "@/components/icons";
 
 const EditSiteForm = dynamic(() => import("@/app/dashboard/ui/edit-site-form"), { ssr: false });
 const UploadImages = dynamic(() => import("@/app/sites/[id]/ui/upload-images"), { ssr: false });
@@ -23,12 +24,45 @@ export default function SiteDetailAdmin({
   site: SiteData;
   photoCount: number;
 }) {
+  const router = useRouter();
   const [editing, setEditing] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+
+  const hasCoords = !!site.latitude && !!site.longitude;
 
   const mapUrl =
-    site.latitude && site.longitude
+    hasCoords
       ? `https://www.openstreetmap.org/export/embed.html?bbox=${Number(site.longitude) - 0.02}%2C${Number(site.latitude) - 0.02}%2C${Number(site.longitude) + 0.02}%2C${Number(site.latitude) + 0.02}&layer=mapnik&marker=${site.latitude}%2C${site.longitude}`
       : null;
+
+  const googleMapsUrl = hasCoords
+    ? `https://www.google.com/maps?q=${site.latitude},${site.longitude}`
+    : null;
+
+  const googleDirectionsUrl = hasCoords
+    ? `https://www.google.com/maps/dir/?api=1&destination=${site.latitude},${site.longitude}`
+    : null;
+
+  async function handleDelete() {
+    if (!confirm(`Delete site "${site.name}" and all its photos? This cannot be undone.`)) return;
+    setDeleting(true);
+    try {
+      const res = await fetch(`/api/sites/${site.id}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        alert(data.error || "Failed to delete");
+        return;
+      }
+      router.push("/admin/sites");
+    } catch {
+      alert("Failed to delete");
+    } finally {
+      setDeleting(false);
+    }
+  }
 
   return (
     <>
@@ -66,8 +100,31 @@ export default function SiteDetailAdmin({
           </div>
         </div>
 
+        {hasCoords && !editing && (
+          <div className="mt-3 flex flex-wrap gap-2">
+            <a
+              href={googleMapsUrl!}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-700 hover:border-brand-300 hover:text-brand-600"
+            >
+              <IconMap className="h-4 w-4" />
+              Open in Google Maps
+            </a>
+            <a
+              href={googleDirectionsUrl!}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-700 hover:border-brand-300 hover:text-brand-600"
+            >
+              <IconNavigation className="h-4 w-4" />
+              Get Directions
+            </a>
+          </div>
+        )}
+
         {mapUrl && !editing && (
-          <div className="mt-4 overflow-hidden rounded-xl border border-slate-200">
+          <div className="mt-3 overflow-hidden rounded-xl border border-slate-200">
             <iframe
               title="Site location map"
               src={mapUrl}
@@ -89,6 +146,20 @@ export default function SiteDetailAdmin({
             }}
             onClose={() => setEditing(false)}
           />
+        )}
+
+        {!editing && (
+          <div className="mt-4 border-t border-slate-100 pt-4">
+            <button
+              type="button"
+              onClick={handleDelete}
+              disabled={deleting}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-red-200 bg-white px-3 py-2 text-xs font-medium text-red-600 hover:bg-red-50 disabled:opacity-50"
+            >
+              <IconTrash className="h-4 w-4" />
+              {deleting ? "Deleting..." : "Delete Site"}
+            </button>
+          </div>
         )}
       </div>
 
