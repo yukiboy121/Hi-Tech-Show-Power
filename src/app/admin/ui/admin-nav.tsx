@@ -12,6 +12,7 @@ import {
   IconSettings,
   IconWrench,
   IconMapPin,
+  IconChevronLeft,
 } from "@/components/icons";
 
 type IconComponent = ComponentType<{ className?: string }>;
@@ -115,14 +116,24 @@ export default function AdminNav() {
 
       <div className="fixed inset-x-0 top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur-md lg:hidden">
         <div className="flex items-center justify-between gap-3 px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))]">
-          <button
-            type="button"
-            onClick={() => setDrawerOpen(true)}
-            className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white active:bg-slate-50"
-            aria-label="Open admin menu"
-          >
-            <IconMenu className="h-5 w-5" />
-          </button>
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={() => history.back()}
+              className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white active:bg-slate-50"
+              aria-label="Go back"
+            >
+              <IconChevronLeft className="h-5 w-5" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setDrawerOpen(true)}
+              className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white active:bg-slate-50"
+              aria-label="Open admin menu"
+            >
+              <IconMenu className="h-5 w-5" />
+            </button>
+          </div>
           <div className="flex min-w-0 flex-1 items-center justify-center gap-1.5">
             {CurrentIcon && <CurrentIcon className="h-4 w-4 shrink-0 text-brand-600" />}
             <p className="truncate text-sm font-bold text-brand-900">
