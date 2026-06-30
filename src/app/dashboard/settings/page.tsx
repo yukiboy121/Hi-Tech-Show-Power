@@ -228,24 +228,24 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      {/* Crop modal */}
+      {/* Crop modal — iOS Photos style */}
       {cropOpen && cropSrc && (
         <div className="fixed inset-0 z-[9998] flex flex-col bg-black pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
-          <div className="flex items-center justify-between px-4 py-3">
+          <div className="flex items-center justify-between px-4 py-2.5">
             <button
               type="button"
               onClick={() => { setCropOpen(false); setCropSrc(null); }}
-              className="rounded-full bg-white/15 px-5 py-2 text-[15px] font-semibold text-white active:bg-white/25 transition-colors"
+              className="text-[17px] font-normal text-white/80 active:text-white transition-colors"
               disabled={uploading}
             >
               Cancel
             </button>
-            <p className="text-[15px] font-semibold text-white/90">Move & Scale</p>
+            <p className="text-[15px] font-semibold text-white/80 tracking-[-0.02em]">1:1</p>
             <button
               type="button"
               onClick={handleCropConfirm}
               disabled={uploading}
-              className="rounded-full bg-brand-500 px-5 py-2 text-[15px] font-semibold text-white shadow-sm active:bg-brand-600 transition-colors disabled:opacity-40"
+              className="text-[17px] font-semibold text-brand-300 active:text-brand-200 transition-colors disabled:opacity-40"
             >
               {uploading ? "Saving..." : "Done"}
             </button>
@@ -267,19 +267,9 @@ export default function SettingsPage() {
               }}
             />
           </div>
-          <div className="flex items-center justify-center gap-4 px-5 py-6">
-            <span className="text-xs text-white/50">Zoom</span>
-            <input
-              type="range"
-              min={1}
-              max={3}
-              step={0.05}
-              value={zoom}
-              onChange={(e) => setZoom(Number(e.target.value))}
-              className="h-1 w-48 appearance-none rounded-full bg-white/20 accent-brand-400 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white"
-            />
-            <span className="text-xs text-white/50">{zoom.toFixed(1)}x</span>
-          </div>
+          <p className="py-3 text-center text-[13px] tracking-[-0.01em] text-white/40">
+            Pinch to zoom · Drag to reposition
+          </p>
         </div>
       )}
 
