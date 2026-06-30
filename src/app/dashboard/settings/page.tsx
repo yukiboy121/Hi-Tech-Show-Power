@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { IconCamera, IconCheck, IconEdit } from "@/components/icons";
+import Cropper, { type Area } from "react-easy-crop";
+import { IconCamera, IconCheck } from "@/components/icons";
 
 type UserProfile = {
   id: number;
@@ -12,6 +13,41 @@ type UserProfile = {
   avatarUrl: string | null;
   role: "admin" | "user";
 };
+
+function createImage(url: string): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.src = url;
+    img.onload = () => resolve(img);
+    img.onerror = () => reject(new Error("Failed to load image"));
+  });
+}
+
+async function getCroppedBlob(imageSrc: string, pixelCrop: Area): Promise<Blob> {
+  const img = await createImage(imageSrc);
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d")!;
+  canvas.width = pixelCrop.width;
+  canvas.height = pixelCrop.height;
+  ctx.drawImage(
+    img,
+    pixelCrop.x,
+    pixelCrop.y,
+    pixelCrop.width,
+    pixelCrop.height,
+    0,
+    0,
+    pixelCrop.width,
+    pixelCrop.height
+  );
+  return new Promise((resolve, reject) => {
+    canvas.toBlob((blob) => {
+      if (blob) resolve(blob);
+      else reject(new Error("Canvas toBlob failed"));
+    }, "image/jpeg", 0.9);
+  });
+}
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -24,6 +60,12 @@ export default function SettingsPage() {
   const [phone, setPhone] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+
+  const [cropOpen, setCropOpen] = useState(false);
+  const [cropSrc, setCropSrc] = useState<string | null>(null);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
 
   async function loadProfile() {
     const res = await fetch("/api/user/profile");
@@ -43,6 +85,51 @@ export default function SettingsPage() {
   useEffect(() => {
     loadProfile();
   }, []);
+
+  const onCropComplete = useCallback((_: Area, croppedPixels: Area) => {
+    setCroppedAreaPixels(croppedPixels);
+  }, []);
+
+  function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      setCropSrc(reader.result as string);
+      setCrop({ x: 0, y: 0 });
+      setZoom(1);
+      setCropOpen(true);
+    };
+    reader.readAsDataURL(file);
+    e.target.value = "";
+  }
+
+  async function handleCropConfirm() {
+    if (!cropSrc || !croppedAreaPixels) return;
+    setUploading(true);
+    setError(null);
+    setSuccess(null);
+    try {
+      const blob = await getCroppedBlob(cropSrc, croppedAreaPixels);
+      const fd = new FormData();
+      fd.append("avatar", blob, "avatar.jpg");
+      const res = await fetch("/api/user/avatar", { method: "POST", body: fd });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || "Upload failed");
+        return;
+      }
+      setProfile((prev) => (prev ? { ...prev, avatarUrl: data.avatarUrl } : prev));
+      setSuccess("Photo updated");
+      setCropOpen(false);
+      setCropSrc(null);
+      setTimeout(() => setSuccess(null), 2500);
+    } catch {
+      setError("Upload failed");
+    } finally {
+      setUploading(false);
+    }
+  }
 
   async function handleSave() {
     setError(null);
@@ -70,31 +157,6 @@ export default function SettingsPage() {
       setError("Something went wrong");
     } finally {
       setSaving(false);
-    }
-  }
-
-  async function handleAvatar(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploading(true);
-    setError(null);
-    setSuccess(null);
-    try {
-      const fd = new FormData();
-      fd.append("avatar", file);
-      const res = await fetch("/api/user/avatar", { method: "POST", body: fd });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.error || "Upload failed");
-        return;
-      }
-      setProfile((prev) => (prev ? { ...prev, avatarUrl: data.avatarUrl } : prev));
-      setSuccess("Photo updated");
-      setTimeout(() => setSuccess(null), 2500);
-    } catch {
-      setError("Upload failed");
-    } finally {
-      setUploading(false);
     }
   }
 
@@ -161,13 +223,65 @@ export default function SettingsPage() {
             type="file"
             accept="image/*"
             className="hidden"
-            onChange={handleAvatar}
+            onChange={handleFileSelect}
           />
         </div>
-        {uploading && (
-          <p className="text-xs text-tertiary-label">Uploading...</p>
-        )}
       </div>
+
+      {/* Crop modal */}
+      {cropOpen && cropSrc && (
+        <div className="fixed inset-0 z-[9998] flex flex-col bg-black/90 pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
+          <div className="flex items-center justify-between px-5 py-4">
+            <button
+              type="button"
+              onClick={() => { setCropOpen(false); setCropSrc(null); }}
+              className="text-[15px] font-normal text-white/70 active:text-white/90"
+              disabled={uploading}
+            >
+              Cancel
+            </button>
+            <p className="text-[15px] font-semibold text-white">Move & Scale</p>
+            <button
+              type="button"
+              onClick={handleCropConfirm}
+              disabled={uploading}
+              className="text-[15px] font-semibold text-brand-300 active:text-brand-200 disabled:opacity-40"
+            >
+              {uploading ? "Saving..." : "Save"}
+            </button>
+          </div>
+          <div className="relative flex-1">
+            <Cropper
+              image={cropSrc}
+              crop={crop}
+              zoom={zoom}
+              aspect={1}
+              cropShape="round"
+              showGrid={false}
+              onCropChange={setCrop}
+              onZoomChange={setZoom}
+              onCropComplete={onCropComplete}
+              classes={{
+                containerClassName: "!bg-black",
+                cropAreaClassName: "!border-2 !border-white !shadow-[0_0_0_9999px_rgba(0,0,0,0.7)]",
+              }}
+            />
+          </div>
+          <div className="flex items-center justify-center gap-4 px-5 py-6">
+            <span className="text-xs text-white/50">Zoom</span>
+            <input
+              type="range"
+              min={1}
+              max={3}
+              step={0.05}
+              value={zoom}
+              onChange={(e) => setZoom(Number(e.target.value))}
+              className="h-1 w-48 appearance-none rounded-full bg-white/20 accent-brand-400 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white"
+            />
+            <span className="text-xs text-white/50">{zoom.toFixed(1)}x</span>
+          </div>
+        </div>
+      )}
 
       <div className="mt-8 space-y-5">
         <div>

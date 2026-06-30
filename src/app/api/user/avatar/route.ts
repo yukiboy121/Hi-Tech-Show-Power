@@ -26,7 +26,7 @@ export async function POST(request: Request) {
     if (process.env.BLOB_READ_WRITE_TOKEN) {
       const { put } = await import("@vercel/blob");
       const blob = await put(`avatars/${user.id}-${Date.now()}.${file.name.split(".").pop()}`, buffer, {
-        access: "private",
+        access: "public",
         contentType: file.type,
       });
       avatarUrl = blob.url;
