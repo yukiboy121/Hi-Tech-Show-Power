@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import "./globals.css";
 import SiteChrome from "@/components/site-chrome";
 import PwaInstallProvider from "@/components/pwa-install-provider";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUser, type SessionUser } from "@/lib/auth";
 import { business } from "@/lib/business";
 
 export const metadata: Metadata = {
@@ -32,14 +32,19 @@ export const viewport: Viewport = {
 };
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
-  const user = await getCurrentUser();
-  const navUser = user ? { name: user.name, email: user.email, role: user.role } : null;
+  let navUser: SessionUser | null = null;
+  try {
+    navUser = await getCurrentUser();
+  } catch {
+    // DB unavailable — render as guest
+  }
+  const displayUser = navUser ? { name: navUser.name, email: navUser.email, role: navUser.role } : null;
 
   return (
     <html lang="en">
       <body className="flex min-h-screen flex-col bg-slate-50 text-slate-900 antialiased">
         <PwaInstallProvider>
-          <SiteChrome user={navUser}>{children}</SiteChrome>
+          <SiteChrome user={displayUser}>{children}</SiteChrome>
         </PwaInstallProvider>
       </body>
     </html>
