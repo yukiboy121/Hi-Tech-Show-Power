@@ -79,7 +79,7 @@ export async function SiteDetail({ siteId, backHref, backLabel }: Props) {
         </h2>
         <SiteGallery
           siteId={site.id}
-          images={imgs.map((im) => ({ id: im.id, path: im.path }))}
+          images={imgs.map((im) => ({ id: im.id, path: im.path, createdAt: im.createdAt }))}
           isAdmin={isAdmin}
           siteName={site.name}
         />
