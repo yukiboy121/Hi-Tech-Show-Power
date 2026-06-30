@@ -5,7 +5,7 @@ import { and, eq, gt } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import crypto from "node:crypto";
 
-const SESSION_COOKIE = "hi_tech_power_session";
+export const SESSION_COOKIE = "hi_tech_power_session";
 const SESSION_TTL_DAYS = 30;
 
 export type SessionUser = {

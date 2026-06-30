@@ -3,7 +3,8 @@ import type { ReactNode } from "react";
 import "./globals.css";
 import SiteChrome from "@/components/site-chrome";
 import PwaInstallProvider from "@/components/pwa-install-provider";
-import { getCurrentUser, type SessionUser } from "@/lib/auth";
+import { cookies } from "next/headers";
+import { getCurrentUser, SESSION_COOKIE, type SessionUser } from "@/lib/auth";
 import { business } from "@/lib/business";
 
 export const metadata: Metadata = {
@@ -32,11 +33,16 @@ export const viewport: Viewport = {
 };
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
+  const store = cookies();
+  const token = store.get(SESSION_COOKIE)?.value;
+
   let navUser: SessionUser | null = null;
-  try {
-    navUser = await getCurrentUser();
-  } catch {
-    // DB unavailable — render as guest
+  if (token) {
+    try {
+      navUser = await getCurrentUser();
+    } catch {
+      // DB unavailable — render as guest
+    }
   }
   const displayUser = navUser ? { name: navUser.name, email: navUser.email, role: navUser.role } : null;
 
