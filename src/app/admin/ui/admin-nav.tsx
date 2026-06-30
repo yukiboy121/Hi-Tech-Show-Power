@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, type ComponentType } from "react";
 import { business } from "@/lib/business";
+import AdminNotifications from "@/app/admin/ui/admin-notifications";
 import {
   IconChart,
   IconClipboard,
@@ -29,7 +30,7 @@ const links: {
   { href: "/admin/settings", label: "Settings", icon: IconSettings },
 ];
 
-const bottomTabs = links;
+const bottomTabs = links.slice(0, 4);
 
 function NavLinks({
   onNavigate,
@@ -95,11 +96,12 @@ export default function AdminNav() {
     <>
       <aside className="hidden w-60 shrink-0 border-r border-slate-200 bg-white lg:block">
         <div className="sticky top-0 flex h-screen flex-col p-4">
-          <div className="mb-6 rounded-xl bg-brand-600 p-4 text-white">
+          <div className="mb-2 flex items-center justify-between rounded-xl bg-brand-600 p-4 text-white">
             <div>
               <p className="text-xs font-bold uppercase tracking-wider text-red-100">Admin Panel</p>
               <p className="mt-1 text-sm font-semibold">{business.shortName}</p>
             </div>
+            <AdminNotifications />
           </div>
           <NavLinks className="flex flex-1 flex-col gap-1.5" />
           <Link
@@ -137,6 +139,7 @@ export default function AdminNav() {
               {currentPage?.label || "Admin"}
             </p>
           </div>
+          <AdminNotifications />
         </div>
       </div>
 
