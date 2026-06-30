@@ -6,14 +6,15 @@ import { useEffect, useState } from "react";
 import InstallAppButton from "@/components/install-app-button";
 import { usePwaInstall } from "@/components/pwa-install-provider";
 import { business } from "@/lib/business";
+import { IconPhone, IconMenu, IconClose, IconArrowRight } from "@/components/icons";
 
 type NavUser = { name: string; role: "admin" | "user" } | null;
 
 const publicLinks = [
-  { href: "/", label: "Home", icon: "🏠" },
-  { href: "/about", label: "About", icon: "ℹ️" },
-  { href: "/services", label: "Services", icon: "🔧" },
-  { href: "/contact", label: "Contact", icon: "📞" },
+  { href: "/", label: "Home" },
+  { href: "/about", label: "About" },
+  { href: "/services", label: "Services" },
+  { href: "/contact", label: "Contact" },
 ];
 
 export default function SiteHeader({ user }: { user: NavUser }) {
@@ -32,45 +33,46 @@ export default function SiteHeader({ user }: { user: NavUser }) {
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
+    return () => { document.body.style.overflow = ""; };
   }, [open]);
 
   return (
     <>
-      <div className="bg-brand-600 px-4 py-2 text-center text-xs font-medium text-white sm:text-sm">
-        <span className="font-bold uppercase">{business.serviceHours}</span>
-        <span className="mx-2 hidden sm:inline">|</span>
+      {/* Top promo bar */}
+      <div className="bg-brand-500 px-4 py-2.5 text-center text-[12px] font-medium text-white sm:text-[13px]">
+        <span className="font-bold uppercase tracking-wide">{business.serviceHours}</span>
+        <span className="mx-2 opacity-40">|</span>
         <a href={`tel:${business.hotlineTel}`} className="hover:underline">
           Hot Line: <strong>{business.hotline}</strong>
         </a>
-        <span className="mx-2 hidden sm:inline">|</span>
+        <span className="mx-2 hidden opacity-40 sm:inline">|</span>
         <a href={`tel:${business.mobileTel}`} className="hidden hover:underline sm:inline">
           {business.mobile}
         </a>
       </div>
 
-      <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 backdrop-blur-md">
+      {/* Header */}
+      <header className="sticky top-0 z-50 border-b border-separator bg-surface-elevated/90 backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
-          <Link href="/" className="flex min-w-0 items-center gap-2">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-600 text-sm font-bold text-white">
-              HP
+          <Link href="/" className="flex min-w-0 items-center gap-2.5">
+            <span className="flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-[10px] bg-brand-500 text-[12px] font-bold tracking-tight text-white shadow-sm">
+              {business.shortName.slice(0, 2).toUpperCase()}
             </span>
-            <span className="truncate text-sm font-semibold leading-tight text-brand-900 sm:text-base">
+            <span className="truncate text-[15px] font-bold tracking-tight text-label">
               {business.shortName}
             </span>
           </Link>
 
-          <nav className="hidden items-center gap-1 md:flex">
+          {/* Desktop nav */}
+          <nav className="hidden items-center gap-0.5 md:flex">
             {publicLinks.map((l) => (
               <Link
                 key={l.href}
                 href={l.href}
-                className={`rounded-lg px-3 py-2 text-sm transition-colors ${
+                className={`rounded-[10px] px-3.5 py-2 text-[14px] font-medium transition-colors ${
                   isActive(l.href)
-                    ? "bg-brand-50 font-medium text-brand-600"
-                    : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                    ? "bg-brand-500/10 text-brand-500"
+                    : "text-secondary-label hover:bg-surface hover:text-label"
                 }`}
               >
                 {l.label}
@@ -78,34 +80,41 @@ export default function SiteHeader({ user }: { user: NavUser }) {
             ))}
           </nav>
 
+          {/* Desktop actions */}
           <div className="hidden items-center gap-2 md:flex">
             {user ? (
               <>
                 {user.role === "admin" && (
                   <Link
                     href="/admin"
-                    className="rounded-lg border border-brand-200 px-3 py-2 text-sm font-medium text-brand-600 hover:bg-brand-50"
+                    className="rounded-[10px] border border-separator px-3.5 py-2 text-[13px] font-medium text-brand-500 hover:bg-brand-500/10 transition-colors"
                   >
                     Admin
                   </Link>
                 )}
-                <Link href="/dashboard" className="rounded-lg px-3 py-2 text-sm text-slate-600 hover:bg-slate-50">
+                <Link
+                  href="/dashboard"
+                  className="rounded-[10px] px-3.5 py-2 text-[13px] font-medium text-secondary-label hover:bg-surface transition-colors"
+                >
                   Dashboard
                 </Link>
                 <form action="/api/auth/logout" method="post">
-                  <button className="rounded-lg bg-brand-900 px-3 py-2 text-sm text-white hover:bg-brand-700">
+                  <button className="rounded-[10px] bg-label px-3.5 py-2 text-[13px] font-medium text-white hover:opacity-90 transition-opacity">
                     Logout
                   </button>
                 </form>
               </>
             ) : (
               <>
-                <Link href="/login" className="rounded-lg px-3 py-2 text-sm text-slate-600 hover:bg-slate-50">
+                <Link
+                  href="/login"
+                  className="rounded-[10px] px-3.5 py-2 text-[13px] font-medium text-secondary-label hover:bg-surface transition-colors"
+                >
                   Login
                 </Link>
                 <Link
                   href="/register"
-                  className="rounded-lg bg-accent-500 px-3 py-2 text-sm font-medium text-brand-900 hover:bg-accent-400"
+                  className="rounded-[10px] bg-brand-500 px-3.5 py-2 text-[13px] font-medium text-white shadow-sm hover:bg-brand-600 transition-colors"
                 >
                   Register
                 </Link>
@@ -113,20 +122,19 @@ export default function SiteHeader({ user }: { user: NavUser }) {
             )}
           </div>
 
+          {/* Mobile hamburger */}
           <button
             type="button"
             aria-label="Toggle menu"
             onClick={() => setOpen(true)}
-            className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 active:bg-slate-50 md:hidden"
+            className="flex h-[38px] w-[38px] items-center justify-center rounded-[10px] border border-separator active:bg-surface md:hidden transition-colors"
           >
-            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
+            <IconMenu className="h-5 w-5 text-label" />
           </button>
         </div>
       </header>
 
-      {/* Mobile full-screen menu */}
+      {/* Mobile drawer */}
       {open && (
         <div className="fixed inset-0 z-[60] md:hidden">
           <button
@@ -135,31 +143,30 @@ export default function SiteHeader({ user }: { user: NavUser }) {
             onClick={() => setOpen(false)}
             aria-label="Close menu"
           />
-          <div className="absolute bottom-0 left-0 right-0 max-h-[90vh] overflow-hidden rounded-t-3xl bg-white shadow-2xl">
-            <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
-              <p className="font-bold text-brand-900">{business.shortName}</p>
+          <div className="absolute bottom-0 left-0 right-0 max-h-[85vh] overflow-hidden rounded-t-[28px] bg-surface-elevated shadow-2xl shadow-black/10">
+            <div className="flex items-center justify-between border-b border-separator px-5 py-4">
+              <p className="text-[17px] font-bold text-label">{business.shortName}</p>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 active:bg-slate-200"
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-surface active:bg-separator transition-colors"
               >
-                ✕
+                <IconClose className="h-4 w-4 text-secondary-label" />
               </button>
             </div>
-            <nav className="overflow-y-auto p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
-              <div className="grid grid-cols-2 gap-2">
+            <nav className="overflow-y-auto px-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
+              <div className="grid grid-cols-2 gap-2.5 py-4">
                 {publicLinks.map((l) => (
                   <Link
                     key={l.href}
                     href={l.href}
                     onClick={() => setOpen(false)}
-                    className={`flex flex-col items-center gap-1 rounded-2xl p-4 text-sm active:scale-[0.98] ${
+                    className={`rounded-[16px] px-4 py-4 text-[14px] font-semibold text-center transition-all active:scale-[0.97] ${
                       isActive(l.href)
-                        ? "bg-brand-600 font-semibold text-white"
-                        : "bg-slate-50 text-slate-700 active:bg-slate-100"
+                        ? "bg-brand-500 text-white shadow-sm"
+                        : "bg-surface text-label active:bg-brand-500/10"
                     }`}
                   >
-                    <span className="text-2xl">{l.icon}</span>
                     {l.label}
                   </Link>
                 ))}
@@ -167,55 +174,58 @@ export default function SiteHeader({ user }: { user: NavUser }) {
 
               <a
                 href={`tel:${business.hotlineTel}`}
-                className="mt-3 flex items-center justify-center gap-2 rounded-2xl bg-accent-500 py-4 text-sm font-bold text-brand-900 active:bg-accent-400"
+                className="flex items-center justify-center gap-2 rounded-[14px] bg-brand-500 py-3.5 text-[14px] font-semibold text-white shadow-sm active:scale-[0.97] transition-all"
               >
-                📞 Call {business.hotline}
+                <IconPhone className="h-4 w-4" />
+                Call {business.hotline}
               </a>
 
               {!isStandalone && (
-                <div className="mt-3">
-                  <InstallAppButton variant="primary" fullWidth className="!bg-brand-600 !text-white hover:!bg-brand-700" />
+                <div className="mt-2.5">
+                  <InstallAppButton variant="primary" fullWidth className="!rounded-[14px] !bg-surface !text-brand-500 !border !border-separator hover:!bg-surface transition-all" />
                 </div>
               )}
 
-              <div className="mt-3 space-y-2">
+              <div className="mt-3 space-y-2 border-t border-separator py-4">
                 {user ? (
                   <>
                     {user.role === "admin" && (
                       <Link
                         href="/admin"
                         onClick={() => setOpen(false)}
-                        className="block rounded-xl border border-brand-200 px-4 py-3.5 text-center text-sm font-medium text-brand-600 active:bg-brand-50"
+                        className="flex items-center justify-between rounded-[14px] bg-brand-500 px-4 py-3.5 text-[14px] font-semibold text-white active:scale-[0.97] transition-all"
                       >
                         Admin Panel
+                        <IconArrowRight className="h-4 w-4" />
                       </Link>
                     )}
                     <Link
                       href="/dashboard"
                       onClick={() => setOpen(false)}
-                      className="block rounded-xl bg-slate-100 px-4 py-3.5 text-center text-sm font-medium text-slate-700 active:bg-slate-200"
+                      className="flex items-center justify-between rounded-[14px] bg-surface px-4 py-3.5 text-[14px] font-medium text-label active:bg-brand-500/10 transition-colors"
                     >
                       Dashboard
+                      <IconArrowRight className="h-4 w-4 text-tertiary-label" />
                     </Link>
                     <form action="/api/auth/logout" method="post">
-                      <button className="w-full rounded-xl bg-brand-900 px-4 py-3.5 text-sm text-white active:bg-brand-700">
+                      <button className="w-full rounded-[14px] bg-label px-4 py-3.5 text-[14px] font-semibold text-white active:opacity-90 transition-opacity">
                         Logout
                       </button>
                     </form>
                   </>
                 ) : (
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-2 gap-2.5">
                     <Link
                       href="/login"
                       onClick={() => setOpen(false)}
-                      className="rounded-xl border border-slate-200 py-3.5 text-center text-sm font-medium active:bg-slate-50"
+                      className="rounded-[14px] border border-separator py-3.5 text-center text-[14px] font-medium text-label active:bg-surface transition-colors"
                     >
                       Login
                     </Link>
                     <Link
                       href="/register"
                       onClick={() => setOpen(false)}
-                      className="rounded-xl bg-brand-600 py-3.5 text-center text-sm font-semibold text-white active:bg-brand-700"
+                      className="rounded-[14px] bg-brand-500 py-3.5 text-center text-[14px] font-semibold text-white active:bg-brand-600 transition-colors"
                     >
                       Register
                     </Link>
@@ -227,14 +237,15 @@ export default function SiteHeader({ user }: { user: NavUser }) {
         </div>
       )}
 
+      {/* Floating call button */}
       {!hideCallBar && (
         <a
           href={`tel:${business.hotlineTel}`}
-          className="fixed bottom-5 right-4 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-brand-600 text-2xl text-white shadow-xl ring-4 ring-brand-600/25 active:scale-95 active:bg-brand-700 md:hidden"
+          className="fixed bottom-6 right-5 z-50 flex h-[56px] w-[56px] items-center justify-center rounded-full bg-brand-500 text-white shadow-lg shadow-brand-500/30 active:scale-90 transition-all"
           style={{ marginBottom: "env(safe-area-inset-bottom)" }}
           aria-label={`Call hotline ${business.hotline}`}
         >
-          📞
+          <IconPhone className="h-6 w-6" />
         </a>
       )}
     </>

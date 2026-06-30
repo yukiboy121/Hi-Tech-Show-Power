@@ -12,9 +12,11 @@ export default function AppShell({ user, children }: { user: NavUser; children: 
   const [moreOpen, setMoreOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-100">
+    <div className="flex min-h-screen flex-col bg-surface">
       <AppHeader user={user} />
-      <main className="app-main flex-1 overflow-y-auto px-4 py-4 pb-28">{children}</main>
+      <main className="app-main flex-1 overflow-y-auto px-4 pb-32 pt-3 animate-[fadeIn_0.3s_ease-out]">
+        {children}
+      </main>
       <AppTabBar onOpenMore={() => setMoreOpen(true)} />
       {moreOpen && <AppMoreMenu user={user} onClose={() => setMoreOpen(false)} />}
     </div>

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
-import { IconMapPin } from "@/components/icons";
+import { IconMapPin, IconNavigation } from "@/components/icons";
 
 const LocationMapPicker = dynamic(() => import("@/components/location-map-picker"), {
   ssr: false,
@@ -30,7 +30,42 @@ export default function CreateSiteForm({
   const [longitude, setLongitude] = useState("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
+  const [locating, setLocating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  async function useMyLocation() {
+    if (!navigator.geolocation) {
+      setError("Geolocation is not supported by your browser");
+      return;
+    }
+    setLocating(true);
+    setError(null);
+    try {
+      const pos = await new Promise<GeolocationPosition>((resolve, reject) =>
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
+          enableHighAccuracy: true,
+          timeout: 10000,
+        })
+      );
+      const lat = pos.coords.latitude.toFixed(6);
+      const lng = pos.coords.longitude.toFixed(6);
+      setLatitude(lat);
+      setLongitude(lng);
+
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&accept-language=en`,
+        { headers: { "User-Agent": "HiTechShowPower/1.0" } }
+      );
+      const data = await res.json();
+      if (data?.display_name) {
+        setLocation(data.display_name);
+      }
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Failed to get location");
+    } finally {
+      setLocating(false);
+    }
+  }
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -92,6 +127,15 @@ export default function CreateSiteForm({
           className="w-full rounded-lg border border-slate-300 px-3 py-3 text-sm outline-none focus:ring-2 focus:ring-brand-500"
         />
       </div>
+      <button
+        type="button"
+        onClick={useMyLocation}
+        disabled={locating}
+        className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-brand-200 bg-brand-50 px-3 py-2.5 text-sm font-medium text-brand-700 hover:bg-brand-100 disabled:opacity-50"
+      >
+        <IconNavigation className="h-4 w-4" />
+        {locating ? "Getting location..." : "Use My Current Location"}
+      </button>
       <LocationMapPicker
         latitude={latitude}
         longitude={longitude}

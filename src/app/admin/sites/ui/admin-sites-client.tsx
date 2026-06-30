@@ -115,23 +115,24 @@ export default function AdminSitesClient({ sites }: { sites: SiteRow[] }) {
                   className="group flex flex-col rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all active:scale-[0.99] hover:border-brand-300 hover:shadow-md"
                 >
                   <div className="flex items-start justify-between gap-2">
-                    <div className="min-w-0">
-                      <p className="truncate font-semibold text-slate-900 group-hover:text-brand-700">
-                        {s.name}
-                      </p>
-                      <p className="mt-0.5 text-xs text-slate-500">
-                        {s.location || "No location"}
-                      </p>
-                    </div>
+                    <p className="truncate font-semibold text-slate-900 group-hover:text-brand-700">
+                      {s.name}
+                    </p>
                     <span className="flex shrink-0 items-center gap-1 rounded-full bg-brand-50 px-2 py-0.5 text-[10px] font-medium text-brand-700">
                       <IconCamera className="h-3 w-3" />
                       {s.imagesCount}
                     </span>
                   </div>
                   {s.description && (
-                    <p className="mt-2 line-clamp-2 text-xs text-slate-600">{s.description}</p>
+                    <p className="mt-1.5 line-clamp-2 text-xs text-slate-600">{s.description}</p>
                   )}
-                  <p className="mt-3 text-xs font-medium text-brand-600">Open site →</p>
+                  {s.location && (
+                    <p className="mt-1.5 flex items-center gap-1 text-xs text-slate-500">
+                      <IconMapPin className="h-3 w-3 shrink-0" />
+                      {s.location}
+                    </p>
+                  )}
+                  <p className="mt-2 text-xs font-medium text-brand-600">Open site →</p>
                 </Link>
               ))}
             </div>

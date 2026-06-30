@@ -30,7 +30,7 @@ export default function SiteChrome({
     return (
       <>
         <SiteHeader user={user} />
-        <main className="flex-1 pb-20 md:pb-0">{children}</main>
+        <main className="flex-1">{children}</main>
         <SiteFooter />
       </>
     );
@@ -43,7 +43,7 @@ export default function SiteChrome({
   return (
     <>
       <SiteHeader user={user} />
-      <main className="flex-1 pb-20 md:pb-0">{children}</main>
+      <main className="flex-1">{children}</main>
       <SiteFooter />
       <InstallAppBanner />
     </>

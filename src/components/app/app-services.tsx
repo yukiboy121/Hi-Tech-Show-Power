@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { mainServices } from "@/lib/business";
+import { IconArrowRight } from "@/components/icons";
 
 const serviceKeys: Record<string, string> = {
   "Generator Maintenance": "maintenance",
@@ -12,30 +13,39 @@ const serviceKeys: Record<string, string> = {
 
 export default function AppServices() {
   return (
-    <div className="space-y-4">
-      <p className="text-sm text-slate-600">
+    <div className="space-y-3 animate-[fadeInUp_0.35s_ease-out]">
+      <p className="px-1 text-[15px] leading-relaxed text-secondary-label">
         Tap a service below to send a request. We respond 24 hours a day.
       </p>
 
-      {mainServices.map((s) => (
-        <div key={s.title} className="overflow-hidden rounded-2xl bg-white shadow-sm">
-          <div className="p-4">
-            <div className="flex items-center gap-3">
-              <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-50 text-2xl">
+      {mainServices.map((s, i) => (
+        <div
+          key={s.title}
+          className="overflow-hidden rounded-[20px] bg-surface-elevated shadow-sm shadow-black/5 transition-all duration-200"
+          style={{ animationDelay: `${i * 60}ms` }}
+        >
+          <div className="p-5">
+            <div className="flex items-center gap-4">
+              <span className="flex h-[52px] w-[52px] items-center justify-center rounded-[16px] bg-brand-500/10 text-2xl">
                 {s.icon}
               </span>
-              <div>
-                <h2 className="font-bold text-brand-900">{s.title}</h2>
-                <p className="mt-0.5 text-xs text-slate-500">{s.features.join(" · ")}</p>
+              <div className="flex-1">
+                <h2 className="text-[17px] font-bold text-label">{s.title}</h2>
+                {s.features.length > 0 && (
+                  <p className="mt-0.5 text-[13px] text-secondary-label">
+                    {s.features.join(" · ")}
+                  </p>
+                )}
               </div>
             </div>
-            <p className="mt-3 text-sm leading-relaxed text-slate-600">{s.desc}</p>
+            <p className="mt-3 text-[15px] leading-relaxed text-secondary-label">{s.desc}</p>
           </div>
           <Link
             href={`/contact?service=${serviceKeys[s.title] || "other"}`}
-            className="block border-t border-slate-100 bg-slate-50 py-3.5 text-center text-sm font-bold text-brand-600 active:bg-brand-50"
+            className="flex items-center justify-center gap-1.5 border-t border-separator py-3.5 text-[14px] font-semibold text-brand-500 active:bg-surface transition-colors"
           >
-            Request This Service →
+            Request This Service
+            <IconArrowRight className="h-4 w-4" />
           </Link>
         </div>
       ))}

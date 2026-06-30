@@ -7,7 +7,7 @@ const defaults: IconProps = {
   viewBox: "0 0 24 24",
   fill: "none",
   stroke: "currentColor",
-  strokeWidth: 2,
+  strokeWidth: 1.8,
   strokeLinecap: "round",
   strokeLinejoin: "round",
   "aria-hidden": true,
@@ -16,8 +16,9 @@ const defaults: IconProps = {
 export function IconChart(props: IconProps) {
   return (
     <svg {...defaults} {...props}>
-      <path d="M3 3v18h18" />
-      <path d="M7 16l4-8 4 5 5-9" />
+      <rect x="3" y="12" width="4" height="8" rx="1" />
+      <rect x="10" y="6" width="4" height="14" rx="1" />
+      <rect x="17" y="2" width="4" height="18" rx="1" />
     </svg>
   );
 }
@@ -25,9 +26,10 @@ export function IconChart(props: IconProps) {
 export function IconClipboard(props: IconProps) {
   return (
     <svg {...defaults} {...props}>
-      <rect x="8" y="2" width="8" height="4" rx="1" />
+      <rect x="8" y="2" width="8" height="4" rx="1.5" />
       <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
-      <path d="M9 12h6M9 16h6" />
+      <line x1="9" y1="12" x2="15" y2="12" />
+      <line x1="9" y1="16" x2="13" y2="16" />
     </svg>
   );
 }
@@ -43,8 +45,8 @@ export function IconWrench(props: IconProps) {
 export function IconMapPin(props: IconProps) {
   return (
     <svg {...defaults} {...props}>
-      <path d="M12 21s7-4.5 7-11a7 7 0 1 0-14 0c0 6.5 7 11 7 11z" />
-      <circle cx="12" cy="10" r="2.5" />
+      <path d="M12 22s8-5 8-11a8 8 0 1 0-16 0c0 6 8 11 8 11z" />
+      <circle cx="12" cy="10" r="3" />
     </svg>
   );
 }
@@ -70,7 +72,7 @@ export function IconCamera(props: IconProps) {
   return (
     <svg {...defaults} {...props}>
       <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
-      <circle cx="12" cy="13" r="3" />
+      <circle cx="12" cy="14" r="3.5" />
     </svg>
   );
 }
@@ -78,8 +80,7 @@ export function IconCamera(props: IconProps) {
 export function IconEdit(props: IconProps) {
   return (
     <svg {...defaults} {...props}>
-      <path d="M12 20h9" />
-      <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+      <path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
     </svg>
   );
 }
@@ -89,7 +90,7 @@ export function IconUpload(props: IconProps) {
     <svg {...defaults} {...props}>
       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
       <polyline points="17 8 12 3 7 8" />
-      <line x1="12" x2="12" y1="3" y2="15" />
+      <line x1="12" y1="3" x2="12" y2="15" />
     </svg>
   );
 }
@@ -97,7 +98,7 @@ export function IconUpload(props: IconProps) {
 export function IconHome(props: IconProps) {
   return (
     <svg {...defaults} {...props}>
-      <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+      <path d="M3 12a2 2 0 0 1 .71-1.53l7-6.08a2 2 0 0 1 2.58 0l7 6.08A2 2 0 0 1 21 12v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
       <polyline points="9 22 9 12 15 12 15 22" />
     </svg>
   );
@@ -107,7 +108,8 @@ export function IconInfo(props: IconProps) {
   return (
     <svg {...defaults} {...props}>
       <circle cx="12" cy="12" r="10" />
-      <path d="M12 16v-4M12 8h.01" />
+      <line x1="12" y1="16" x2="12" y2="12" />
+      <circle cx="12" cy="8" r="0.5" fill="currentColor" stroke="none" />
     </svg>
   );
 }
@@ -115,9 +117,9 @@ export function IconInfo(props: IconProps) {
 export function IconMenu(props: IconProps) {
   return (
     <svg {...defaults} {...props}>
-      <line x1="4" x2="20" y1="6" y2="6" />
-      <line x1="4" x2="20" y1="12" y2="12" />
-      <line x1="4" x2="20" y1="18" y2="18" />
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="4" y1="12" x2="20" y2="12" />
+      <line x1="4" y1="18" x2="14" y2="18" />
     </svg>
   );
 }
@@ -134,8 +136,8 @@ export function IconBell(props: IconProps) {
 export function IconClose(props: IconProps) {
   return (
     <svg {...defaults} {...props}>
-      <line x1="18" x2="6" y1="6" y2="18" />
-      <line x1="6" x2="18" y1="6" y2="18" />
+      <line x1="18" y1="6" x2="6" y2="18" />
+      <line x1="6" y1="6" x2="18" y2="18" />
     </svg>
   );
 }
@@ -148,11 +150,19 @@ export function IconChevronLeft(props: IconProps) {
   );
 }
 
+export function IconChevronRight(props: IconProps) {
+  return (
+    <svg {...defaults} {...props}>
+      <polyline points="9 18 15 12 9 6" />
+    </svg>
+  );
+}
+
 export function IconPlus(props: IconProps) {
   return (
     <svg {...defaults} {...props}>
-      <line x1="12" x2="12" y1="5" y2="19" />
-      <line x1="5" x2="19" y1="12" y2="12" />
+      <line x1="12" y1="5" x2="12" y2="19" />
+      <line x1="5" y1="12" x2="19" y2="12" />
     </svg>
   );
 }
@@ -161,7 +171,7 @@ export function IconSearch(props: IconProps) {
   return (
     <svg {...defaults} {...props}>
       <circle cx="11" cy="11" r="8" />
-      <line x1="21" x2="16.65" y1="21" y2="16.65" />
+      <line x1="21" y1="21" x2="16.65" y2="16.65" />
     </svg>
   );
 }
@@ -170,9 +180,9 @@ export function IconTrash(props: IconProps) {
   return (
     <svg {...defaults} {...props}>
       <polyline points="3 6 5 6 21 6" />
-      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-      <line x1="10" x2="10" y1="11" y2="17" />
-      <line x1="14" x2="14" y1="11" y2="17" />
+      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+      <line x1="10" y1="11" x2="10" y2="17" />
+      <line x1="14" y1="11" x2="14" y2="17" />
     </svg>
   );
 }
@@ -180,9 +190,9 @@ export function IconTrash(props: IconProps) {
 export function IconDots(props: IconProps) {
   return (
     <svg {...defaults} {...props}>
-      <circle cx="12" cy="5" r="1" />
-      <circle cx="12" cy="12" r="1" />
-      <circle cx="12" cy="19" r="1" />
+      <circle cx="12" cy="5" r="1.2" fill="currentColor" stroke="none" />
+      <circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none" />
+      <circle cx="12" cy="19" r="1.2" fill="currentColor" stroke="none" />
     </svg>
   );
 }
@@ -191,15 +201,8 @@ export function IconInfoCircle(props: IconProps) {
   return (
     <svg {...defaults} {...props}>
       <circle cx="12" cy="12" r="10" />
-      <path d="M12 16v-4M12 8h.01" />
-    </svg>
-  );
-}
-
-export function IconChevronRight(props: IconProps) {
-  return (
-    <svg {...defaults} {...props}>
-      <polyline points="9 18 15 12 9 6" />
+      <line x1="12" y1="16" x2="12" y2="12" />
+      <circle cx="12" cy="8" r="1" fill="currentColor" stroke="none" />
     </svg>
   );
 }
@@ -209,7 +212,7 @@ export function IconDownload(props: IconProps) {
     <svg {...defaults} {...props}>
       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
       <polyline points="7 10 12 15 17 10" />
-      <line x1="12" x2="12" y1="15" y2="3" />
+      <line x1="12" y1="15" x2="12" y2="3" />
     </svg>
   );
 }
@@ -226,8 +229,60 @@ export function IconMap(props: IconProps) {
   return (
     <svg {...defaults} {...props}>
       <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" />
-      <line x1="8" x2="8" y1="2" y2="18" />
-      <line x1="16" x2="16" y1="6" y2="22" />
+      <line x1="8" y1="2" x2="8" y2="18" />
+      <line x1="16" y1="6" x2="16" y2="22" />
+    </svg>
+  );
+}
+
+export function IconArrowRight(props: IconProps) {
+  return (
+    <svg {...defaults} {...props}>
+      <line x1="5" y1="12" x2="19" y2="12" />
+      <polyline points="12 5 19 12 12 19" />
+    </svg>
+  );
+}
+
+export function IconCheck(props: IconProps) {
+  return (
+    <svg {...defaults} {...props}>
+      <polyline points="20 6 9 17 4 12" />
+    </svg>
+  );
+}
+
+export function IconRefresh(props: IconProps) {
+  return (
+    <svg {...defaults} {...props}>
+      <polyline points="23 4 23 10 17 10" />
+      <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+    </svg>
+  );
+}
+
+export function IconFilter(props: IconProps) {
+  return (
+    <svg {...defaults} {...props}>
+      <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+    </svg>
+  );
+}
+
+export function IconTag(props: IconProps) {
+  return (
+    <svg {...defaults} {...props}>
+      <path d="M12 2H2v10l9.29 9.29a2 2 0 0 0 2.83 0l6.17-6.17a2 2 0 0 0 0-2.83L12 2z" />
+      <circle cx="7" cy="7" r="1.5" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+export function IconMail(props: IconProps) {
+  return (
+    <svg {...defaults} {...props}>
+      <rect x="2" y="4" width="20" height="16" rx="2" />
+      <polyline points="2 4 12 13 22 4" />
     </svg>
   );
 }
