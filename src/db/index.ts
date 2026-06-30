@@ -13,7 +13,10 @@ function getPool() {
   }
 
   if (!globalForDb.__arenaNextJsPostgresqlPool) {
-    globalForDb.__arenaNextJsPostgresqlPool = new Pool({ connectionString: databaseUrl });
+    globalForDb.__arenaNextJsPostgresqlPool = new Pool({
+      connectionString: databaseUrl,
+      ssl: { rejectUnauthorized: false },
+    });
   }
 
   return globalForDb.__arenaNextJsPostgresqlPool;
