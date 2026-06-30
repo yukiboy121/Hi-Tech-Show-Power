@@ -71,5 +71,25 @@ export const sitesRelations = relations(sites, ({ many }) => ({
   repairs: many(repairs),
 }));
 
+export const notifications = pgTable("notifications", {
+  id: serial("id").primaryKey(),
+  type: varchar("type", { length: 50 }).notNull().default("service_request"),
+  title: varchar("title", { length: 255 }).notNull(),
+  body: text("body"),
+  link: varchar("link", { length: 255 }),
+  read: boolean("read").notNull().default(false),
+  orderId: integer("order_id"),
+  createdAt: timestamp("created_at", { withTimezone: false }).notNull().defaultNow(),
+});
+
+export const pushSubscriptions = pgTable("push_subscriptions", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  endpoint: varchar("endpoint", { length: 500 }).notNull(),
+  p256dh: varchar("p256dh", { length: 255 }).notNull(),
+  auth: varchar("auth", { length: 255 }).notNull(),
+  createdAt: timestamp("created_at", { withTimezone: false }).notNull().defaultNow(),
+});
+
 export const ordersRelations = relations(orders, ({ }) => ({}));
 export const repairsRelations = relations(repairs, ({ }) => ({}));
