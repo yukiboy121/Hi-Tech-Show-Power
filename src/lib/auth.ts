@@ -12,6 +12,8 @@ export type SessionUser = {
   id: number;
   name: string;
   email: string;
+  phone: string | null;
+  avatarUrl: string | null;
   role: "admin" | "user";
 };
 
@@ -59,7 +61,7 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
   if (!token) return null;
   const now = new Date();
   const rows = await db
-    .select({ id: users.id, name: users.name, email: users.email, role: users.role })
+    .select({ id: users.id, name: users.name, email: users.email, phone: users.phone, avatarUrl: users.avatarUrl, role: users.role })
     .from(sessions)
     .innerJoin(users, eq(users.id, sessions.userId))
     .where(and(eq(sessions.token, token), gt(sessions.expiresAt, now)))

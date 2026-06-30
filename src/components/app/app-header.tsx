@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { business } from "@/lib/business";
 import { IconChevronLeft, IconPhone } from "@/components/icons";
 
-type NavUser = { name: string; role: "admin" | "user" } | null;
+type NavUser = { name: string; phone?: string | null; avatarUrl?: string | null; role: "admin" | "user" } | null;
 
 const titles: Record<string, string> = {
   "/": "Home",

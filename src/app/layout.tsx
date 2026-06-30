@@ -44,7 +44,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       // DB unavailable — render as guest
     }
   }
-  const displayUser = navUser ? { name: navUser.name, email: navUser.email, role: navUser.role } : null;
+  const displayUser = navUser ? { name: navUser.name, email: navUser.email, phone: navUser.phone, avatarUrl: navUser.avatarUrl, role: navUser.role } : null;
 
   return (
     <html lang="en">

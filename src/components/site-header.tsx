@@ -8,7 +8,7 @@ import { usePwaInstall } from "@/components/pwa-install-provider";
 import { business } from "@/lib/business";
 import { IconPhone, IconMenu, IconClose, IconArrowRight } from "@/components/icons";
 
-type NavUser = { name: string; role: "admin" | "user" } | null;
+type NavUser = { name: string; phone?: string | null; avatarUrl?: string | null; role: "admin" | "user" } | null;
 
 const publicLinks = [
   { href: "/", label: "Home" },

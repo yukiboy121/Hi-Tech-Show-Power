@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect } from "react";
 import { business } from "@/lib/business";
 
-type NavUser = { name: string; email?: string; role: "admin" | "user" } | null;
+type NavUser = { name: string; email?: string; phone?: string | null; avatarUrl?: string | null; role: "admin" | "user" } | null;
 
 export default function AppMoreMenu({
   user,
@@ -61,24 +61,53 @@ export default function AppMoreMenu({
 
         <div className="flex-1 overflow-y-auto px-3 pb-2">
           {user ? (
-            <Link
-              href="/dashboard"
-              onClick={onClose}
-              className="group relative mb-[10px] flex items-center gap-3.5 overflow-hidden rounded-2xl bg-brand-50 px-4 py-[14px] active:opacity-80"
-            >
-              <span className="flex h-[34px] w-[34px] items-center justify-center rounded-full bg-brand-500 text-[15px] font-semibold text-white shadow-sm">
-                {user.name.charAt(0).toUpperCase()}
-              </span>
-              <div className="flex-1">
-                <p className="text-[15px] font-semibold tracking-[-0.022em] text-label">
-                  {user.name}
-                </p>
-                <p className="mt-0.5 text-[13px] tracking-[-0.012em] text-secondary-label">
-                  My Account
-                </p>
-              </div>
-              <span className="text-[15px] text-tertiary-label">›</span>
-            </Link>
+            <>
+              <Link
+                href="/dashboard"
+                onClick={onClose}
+                className="group relative mb-[10px] flex items-center gap-3.5 overflow-hidden rounded-2xl bg-brand-50 px-4 py-[14px] active:opacity-80"
+              >
+                {user.avatarUrl ? (
+                  <img
+                    src={user.avatarUrl}
+                    alt=""
+                    className="h-[34px] w-[34px] rounded-full object-cover shadow-sm"
+                  />
+                ) : (
+                  <span className="flex h-[34px] w-[34px] items-center justify-center rounded-full bg-brand-500 text-[15px] font-semibold text-white shadow-sm">
+                    {user.name.charAt(0).toUpperCase()}
+                  </span>
+                )}
+                <div className="flex-1">
+                  <p className="text-[15px] font-semibold tracking-[-0.022em] text-label">
+                    {user.name}
+                  </p>
+                  <p className="mt-0.5 text-[13px] tracking-[-0.012em] text-secondary-label">
+                    My Account
+                  </p>
+                </div>
+                <span className="text-[15px] text-tertiary-label">›</span>
+              </Link>
+
+              <Link
+                href="/dashboard/settings"
+                onClick={onClose}
+                className="mb-[10px] flex items-center gap-3.5 rounded-[14px] px-4 py-[13px] active:bg-surface"
+              >
+                <span className="flex h-[30px] w-[30px] items-center justify-center rounded-[9px] bg-surface text-[15px]">
+                  ⚙️
+                </span>
+                <div className="flex-1">
+                  <p className="text-[15px] font-normal tracking-[-0.022em] text-label">
+                    Settings
+                  </p>
+                  <p className="mt-0.5 text-[12px] tracking-[-0.008em] text-tertiary-label">
+                    Profile, photo & contact
+                  </p>
+                </div>
+                <span className="text-[15px] text-tertiary-label">›</span>
+              </Link>
+            </>
           ) : null}
 
           <div className="mb-[6px] flex items-center gap-2 px-4 pb-1 pt-2">
