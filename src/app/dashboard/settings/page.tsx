@@ -230,24 +230,24 @@ export default function SettingsPage() {
 
       {/* Crop modal */}
       {cropOpen && cropSrc && (
-        <div className="fixed inset-0 z-[9998] flex flex-col bg-black/90 pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
-          <div className="flex items-center justify-between px-5 py-4">
+        <div className="fixed inset-0 z-[9998] flex flex-col bg-black pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
+          <div className="flex items-center justify-between px-4 py-3">
             <button
               type="button"
               onClick={() => { setCropOpen(false); setCropSrc(null); }}
-              className="text-[15px] font-normal text-white/70 active:text-white/90"
+              className="rounded-full bg-white/15 px-5 py-2 text-[15px] font-semibold text-white active:bg-white/25 transition-colors"
               disabled={uploading}
             >
               Cancel
             </button>
-            <p className="text-[15px] font-semibold text-white">Move & Scale</p>
+            <p className="text-[15px] font-semibold text-white/90">Move & Scale</p>
             <button
               type="button"
               onClick={handleCropConfirm}
               disabled={uploading}
-              className="text-[15px] font-semibold text-brand-300 active:text-brand-200 disabled:opacity-40"
+              className="rounded-full bg-brand-500 px-5 py-2 text-[15px] font-semibold text-white shadow-sm active:bg-brand-600 transition-colors disabled:opacity-40"
             >
-              {uploading ? "Saving..." : "Save"}
+              {uploading ? "Saving..." : "Done"}
             </button>
           </div>
           <div className="relative flex-1">
