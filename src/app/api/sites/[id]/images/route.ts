@@ -69,7 +69,8 @@ export async function POST(req: NextRequest, context: { params: { id: string } }
     const authRes = authErrorResponse(error);
     if (authRes) return authRes;
     console.error(error);
-    return Response.json({ error: "Server error" }, { status: 500 });
+    const message = error instanceof Error ? `${error.name}: ${error.message}` : "Server error";
+    return Response.json({ error: message }, { status: 500 });
   }
 }
 
