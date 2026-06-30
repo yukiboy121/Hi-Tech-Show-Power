@@ -135,31 +135,30 @@ export default function SiteDetailAdmin({
         )}
 
         {editing && (
-          <EditSiteForm
-            siteId={site.id}
-            initial={{
-              name: site.name,
-              location: site.location ?? "",
-              latitude: site.latitude ?? "",
-              longitude: site.longitude ?? "",
-              description: site.description ?? "",
-            }}
-            onClose={() => setEditing(false)}
-          />
-        )}
-
-        {!editing && (
-          <div className="mt-4 border-t border-slate-100 pt-4">
-            <button
-              type="button"
-              onClick={handleDelete}
-              disabled={deleting}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-red-200 bg-white px-3 py-2 text-xs font-medium text-red-600 hover:bg-red-50 disabled:opacity-50"
-            >
-              <IconTrash className="h-4 w-4" />
-              {deleting ? "Deleting..." : "Delete Site"}
-            </button>
-          </div>
+          <>
+            <EditSiteForm
+              siteId={site.id}
+              initial={{
+                name: site.name,
+                location: site.location ?? "",
+                latitude: site.latitude ?? "",
+                longitude: site.longitude ?? "",
+                description: site.description ?? "",
+              }}
+              onClose={() => setEditing(false)}
+            />
+            <div className="mt-4 border-t border-slate-100 pt-4">
+              <button
+                type="button"
+                onClick={handleDelete}
+                disabled={deleting}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-red-200 bg-white px-3 py-2 text-xs font-medium text-red-600 hover:bg-red-50 disabled:opacity-50"
+              >
+                <IconTrash className="h-4 w-4" />
+                {deleting ? "Deleting..." : "Delete Site"}
+              </button>
+            </div>
+          </>
         )}
       </div>
 
