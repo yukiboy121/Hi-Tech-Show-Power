@@ -5,6 +5,7 @@ import { notFound, redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
 import Link from "next/link";
 import SiteDetailAdmin from "@/components/site-detail-admin";
+import SiteGallery from "@/components/site-gallery";
 import { IconCamera, IconChevronLeft, IconMapPin } from "@/components/icons";
 
 export const dynamic = "force-dynamic";
@@ -76,29 +77,12 @@ export async function SiteDetail({ siteId, backHref, backLabel }: Props) {
           <IconCamera className="h-5 w-5 text-brand-600" />
           Site Gallery
         </h2>
-        {imgs.length === 0 ? (
-          <div className="rounded-xl border-2 border-dashed border-slate-200 py-12 text-center">
-            <IconCamera className="mx-auto h-10 w-10 text-slate-300" />
-            <p className="mt-2 text-sm text-slate-500">No photos uploaded yet</p>
-            {isAdmin && <p className="mt-1 text-xs text-slate-400">Use the form above to add images</p>}
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-            {imgs.map((im) => (
-              <div
-                key={im.id}
-                className="group relative aspect-square overflow-hidden rounded-xl border border-slate-200 bg-slate-50"
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={im.path}
-                  alt={`${site.name} photo`}
-                  className="h-full w-full object-cover transition-transform group-hover:scale-105"
-                />
-              </div>
-            ))}
-          </div>
-        )}
+        <SiteGallery
+          siteId={site.id}
+          images={imgs.map((im) => ({ id: im.id, path: im.path }))}
+          isAdmin={isAdmin}
+          siteName={site.name}
+        />
       </div>
     </div>
   );
