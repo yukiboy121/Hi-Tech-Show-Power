@@ -64,7 +64,7 @@ export default function SiteGallery({
           className="group relative aspect-square overflow-hidden rounded-xl border border-slate-200 bg-slate-50"
         >
           <img
-            src={im.path}
+            src={`/api/images/${im.id}`}
             alt={`${siteName} photo`}
             className="h-full w-full object-cover transition-transform group-hover:scale-105"
           />

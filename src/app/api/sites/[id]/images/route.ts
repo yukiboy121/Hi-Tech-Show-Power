@@ -9,6 +9,7 @@ import fs from "node:fs/promises";
 import { randomUUID } from "node:crypto";
 
 const BLOB_TOKEN = process.env.BLOB_READ_WRITE_TOKEN;
+const isBlobConfigured = !!BLOB_TOKEN;
 
 export async function POST(req: NextRequest, context: { params: { id: string } }) {
   try {
@@ -35,12 +36,9 @@ export async function POST(req: NextRequest, context: { params: { id: string } }
 
       let publicPath: string;
 
-      if (BLOB_TOKEN) {
-        const blob = await put(filename, f, {
-          access: "public",
-          token: BLOB_TOKEN,
-        });
-        publicPath = blob.url;
+      if (isBlobConfigured) {
+        const { url } = await put(filename, f, { access: "private" });
+        publicPath = url;
       } else if (process.env.VERCEL) {
         return Response.json({
           error:
@@ -99,8 +97,8 @@ export async function DELETE(req: NextRequest, context: { params: { id: string }
 
     const image = rows[0];
 
-    if (BLOB_TOKEN && image.path.startsWith("https://")) {
-      await del(image.path, { token: BLOB_TOKEN }).catch(() => {});
+    if (isBlobConfigured && image.path.startsWith("https://")) {
+      await del(image.path).catch(() => {});
     }
 
     await db.delete(siteImages).where(eq(siteImages.id, imageId));
