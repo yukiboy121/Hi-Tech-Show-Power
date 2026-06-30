@@ -32,9 +32,17 @@ export default function AppMoreMenu({
         <div className="flex items-center justify-between px-5 pt-[max(3rem,env(safe-area-inset-top))] pb-5">
           <div className="flex items-center gap-3">
             {user ? (
-              <span className="flex h-[34px] w-[34px] items-center justify-center rounded-full bg-brand-500 text-[15px] font-semibold text-white">
-                {user.name.charAt(0).toUpperCase()}
-              </span>
+              user.avatarUrl ? (
+                <img
+                  src={user.avatarUrl}
+                  alt=""
+                  className="h-[34px] w-[34px] rounded-full object-cover shadow-sm"
+                />
+              ) : (
+                <span className="flex h-[34px] w-[34px] items-center justify-center rounded-full bg-brand-500 text-[15px] font-semibold text-white">
+                  {user.name.charAt(0).toUpperCase()}
+                </span>
+              )
             ) : (
               <span className="flex h-[34px] w-[34px] items-center justify-center rounded-full bg-surface text-base">
                 👤
@@ -90,9 +98,28 @@ export default function AppMoreMenu({
               </Link>
 
               <Link
+                href="/about"
+                onClick={onClose}
+                className="flex items-center gap-3.5 rounded-[14px] px-4 py-[13px] active:bg-surface"
+              >
+                <span className="flex h-[30px] w-[30px] items-center justify-center rounded-[9px] bg-surface text-[15px]">
+                  ℹ️
+                </span>
+                <div className="flex-1">
+                  <p className="text-[15px] font-normal tracking-[-0.022em] text-label">
+                    About Us
+                  </p>
+                  <p className="mt-0.5 text-[12px] tracking-[-0.008em] text-tertiary-label">
+                    Company info & contact
+                  </p>
+                </div>
+                <span className="text-[15px] text-tertiary-label">›</span>
+              </Link>
+
+              <Link
                 href="/dashboard/settings"
                 onClick={onClose}
-                className="mb-[10px] flex items-center gap-3.5 rounded-[14px] px-4 py-[13px] active:bg-surface"
+                className="flex items-center gap-3.5 rounded-[14px] px-4 py-[13px] active:bg-surface"
               >
                 <span className="flex h-[30px] w-[30px] items-center justify-center rounded-[9px] bg-surface text-[15px]">
                   ⚙️
@@ -107,98 +134,85 @@ export default function AppMoreMenu({
                 </div>
                 <span className="text-[15px] text-tertiary-label">›</span>
               </Link>
-            </>
-          ) : null}
 
-          <div className="mb-[6px] flex items-center gap-2 px-4 pb-1 pt-2">
-            <span className="h-[3px] w-[3px] rounded-full bg-tertiary-label" />
-            <p className="text-[12px] font-medium uppercase tracking-[0.02em] text-tertiary-label">
-              Menu
-            </p>
-          </div>
+              {user.role === "admin" && (
+                <Link
+                  href="/admin"
+                  onClick={onClose}
+                  className="flex items-center gap-3.5 rounded-[14px] bg-brand-500 px-4 py-[14px] active:bg-brand-600"
+                >
+                  <span className="flex h-[30px] w-[30px] items-center justify-center rounded-[9px] bg-white/20 text-[15px]">
+                    ⚙️
+                  </span>
+                  <div className="flex-1">
+                    <p className="text-[15px] font-semibold tracking-[-0.022em] text-white">
+                      Admin Panel
+                    </p>
+                    <p className="mt-0.5 text-[12px] tracking-[-0.008em] text-white/70">
+                      Orders, sites & settings
+                    </p>
+                  </div>
+                  <span className="text-[15px] text-white/50">›</span>
+                </Link>
+              )}
 
-          <Link
-            href="/about"
-            onClick={onClose}
-            className="flex items-center gap-3.5 rounded-[14px] px-4 py-[13px] active:bg-surface"
-          >
-            <span className="flex h-[30px] w-[30px] items-center justify-center rounded-[9px] bg-surface text-[15px]">
-              ℹ️
-            </span>
-            <div className="flex-1">
-              <p className="text-[15px] font-normal tracking-[-0.022em] text-label">
-                About Us
-              </p>
-              <p className="mt-0.5 text-[12px] tracking-[-0.008em] text-tertiary-label">
-                Company info & contact
-              </p>
-            </div>
-            <span className="text-[15px] text-tertiary-label">›</span>
-          </Link>
-
-          {user?.role === "admin" && (
-            <>
-              <div className="mb-[6px] mt-2 flex items-center gap-2 px-4 pb-1 pt-2">
-                <span className="h-[3px] w-[3px] rounded-full bg-tertiary-label" />
-                <p className="text-[12px] font-medium uppercase tracking-[0.02em] text-tertiary-label">
-                  Admin
-                </p>
+              <div className="mt-3 border-t border-separator pt-3">
+                <form action="/api/auth/logout" method="post">
+                  <button className="flex w-full items-center gap-3.5 rounded-[14px] px-4 py-[13px] active:bg-surface">
+                    <span className="flex h-[30px] w-[30px] items-center justify-center rounded-[9px] bg-surface text-[15px]">
+                      🚪
+                    </span>
+                    <span className="text-[15px] font-normal tracking-[-0.022em] text-system-red">
+                      Logout
+                    </span>
+                  </button>
+                </form>
               </div>
+            </>
+          ) : (
+            <>
               <Link
-                href="/admin"
+                href="/about"
                 onClick={onClose}
-                className="flex items-center gap-3.5 rounded-[14px] bg-brand-500 px-4 py-[14px] active:bg-brand-600"
+                className="flex items-center gap-3.5 rounded-[14px] px-4 py-[13px] active:bg-surface"
               >
-                <span className="flex h-[30px] w-[30px] items-center justify-center rounded-[9px] bg-white/20 text-[15px]">
-                  ⚙️
+                <span className="flex h-[30px] w-[30px] items-center justify-center rounded-[9px] bg-surface text-[15px]">
+                  ℹ️
                 </span>
                 <div className="flex-1">
-                  <p className="text-[15px] font-semibold tracking-[-0.022em] text-white">
-                    Admin Panel
+                  <p className="text-[15px] font-normal tracking-[-0.022em] text-label">
+                    About Us
                   </p>
-                  <p className="mt-0.5 text-[12px] tracking-[-0.008em] text-white/70">
-                    Orders, sites & settings
+                  <p className="mt-0.5 text-[12px] tracking-[-0.008em] text-tertiary-label">
+                    Company info & contact
                   </p>
                 </div>
-                <span className="text-[15px] text-white/50">›</span>
+                <span className="text-[15px] text-tertiary-label">›</span>
               </Link>
-            </>
-          )}
-        </div>
 
-        <div className="border-t border-separator px-3 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
-          {user ? (
-            <form action="/api/auth/logout" method="post">
-              <button className="flex w-full items-center gap-3.5 rounded-[14px] px-4 py-[13px] active:bg-surface">
-                <span className="flex h-[30px] w-[30px] items-center justify-center rounded-[9px] bg-surface text-[15px]">
-                  🚪
-                </span>
-                <span className="text-[15px] font-normal tracking-[-0.022em] text-system-red">
-                  Logout
-                </span>
-              </button>
-            </form>
-          ) : (
-            <div className="flex flex-col gap-2 px-4 py-2">
-              <Link
-                href="/login"
-                onClick={onClose}
-                className="flex items-center justify-center gap-2 rounded-[14px] border border-separator py-[13px] text-[15px] font-semibold tracking-[-0.022em] text-label active:bg-surface"
-              >
-                🔑 Login
-              </Link>
-              <Link
-                href="/register"
-                onClick={onClose}
-                className="flex items-center justify-center gap-2 rounded-[14px] bg-brand-500 py-[13px] text-[15px] font-semibold tracking-[-0.022em] text-white active:bg-brand-600"
-              >
-                📝 Register
-              </Link>
-            </div>
+              <div className="mt-3 border-t border-separator pt-3">
+                <div className="flex flex-col gap-2 px-4 py-2">
+                  <Link
+                    href="/login"
+                    onClick={onClose}
+                    className="flex items-center justify-center gap-2 rounded-[14px] border border-separator py-[13px] text-[15px] font-semibold tracking-[-0.022em] text-label active:bg-surface"
+                  >
+                    🔑 Login
+                  </Link>
+                  <Link
+                    href="/register"
+                    onClick={onClose}
+                    className="flex items-center justify-center gap-2 rounded-[14px] bg-brand-500 py-[13px] text-[15px] font-semibold tracking-[-0.022em] text-white active:bg-brand-600"
+                  >
+                    📝 Register
+                  </Link>
+                </div>
+              </div>
+            </>
           )}
 
           {user?.role !== "admin" && (
-            <div className="px-4 pt-2">
+            <div className="px-4 pt-3">
               <a
                 href={`tel:${business.hotlineTel}`}
                 className="flex items-center justify-center gap-2 rounded-full bg-system-green/10 py-3 text-[14px] font-semibold tracking-[-0.012em] text-system-green active:bg-system-green/15"
@@ -207,8 +221,10 @@ export default function AppMoreMenu({
               </a>
             </div>
           )}
+        </div>
 
-          <div className="mt-3 rounded-2xl bg-surface px-5 py-[14px]">
+        <div className="border-t border-separator px-3 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
+          <div className="rounded-2xl bg-surface px-5 py-[14px]">
             <p className="text-[12px] font-semibold uppercase tracking-[0.04em] text-brand-500">
               {business.serviceHours}
             </p>
