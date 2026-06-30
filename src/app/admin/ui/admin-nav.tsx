@@ -30,7 +30,7 @@ const links: {
   { href: "/admin/settings", label: "Settings", icon: IconSettings },
 ];
 
-const bottomTabs = links.slice(0, 4);
+const bottomTabs = links;
 
 function NavLinks({
   onNavigate,
@@ -77,9 +77,6 @@ export default function AdminNav() {
     l.exact ? pathname === l.href : pathname.startsWith(l.href)
   );
   const CurrentIcon = currentPage?.icon;
-  const moreActive = links.slice(4).some((l) =>
-    l.exact ? pathname === l.href : pathname.startsWith(l.href)
-  );
 
   useEffect(() => {
     setDrawerOpen(false);
@@ -203,17 +200,6 @@ export default function AdminNav() {
             </Link>
           );
         })}
-        <button
-          type="button"
-          onClick={() => setDrawerOpen(true)}
-          className={`flex flex-1 flex-col items-center gap-0.5 py-2.5 text-[10px] font-medium transition-colors active:bg-slate-50 ${
-            moreActive ? "text-brand-600" : "text-slate-500"
-          }`}
-        >
-          <IconMenu className={`h-5 w-5 ${moreActive ? "scale-110" : ""}`} />
-          More
-          {moreActive && <span className="h-1 w-1 rounded-full bg-brand-600" />}
-        </button>
       </nav>
     </>
   );
