@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, type ComponentType } from "react";
-import AdminNotifications from "./admin-notifications";
 import { business } from "@/lib/business";
 import {
   IconChart,
@@ -30,7 +29,7 @@ const links: {
   { href: "/admin/settings", label: "Settings", icon: IconSettings },
 ];
 
-const bottomTabs = links.slice(0, 4);
+const bottomTabs = links;
 
 function NavLinks({
   onNavigate,
@@ -69,6 +68,7 @@ function NavLinks({
 }
 
 export default function AdminNav() {
+  const router = useRouter();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const pathname = usePathname();
 
@@ -96,12 +96,9 @@ export default function AdminNav() {
       <aside className="hidden w-60 shrink-0 border-r border-slate-200 bg-white lg:block">
         <div className="sticky top-0 flex h-screen flex-col p-4">
           <div className="mb-6 rounded-xl bg-brand-600 p-4 text-white">
-            <div className="flex items-start justify-between gap-2">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-red-100">Admin Panel</p>
-                <p className="mt-1 text-sm font-semibold">{business.shortName}</p>
-              </div>
-              <AdminNotifications />
+            <div>
+              <p className="text-xs font-bold uppercase tracking-wider text-red-100">Admin Panel</p>
+              <p className="mt-1 text-sm font-semibold">{business.shortName}</p>
             </div>
           </div>
           <NavLinks className="flex flex-1 flex-col gap-1.5" />
@@ -119,7 +116,7 @@ export default function AdminNav() {
           <div className="flex items-center gap-1">
             <button
               type="button"
-              onClick={() => history.back()}
+              onClick={() => router.push("/")}
               className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white active:bg-slate-50"
               aria-label="Go back"
             >
@@ -140,7 +137,6 @@ export default function AdminNav() {
               {currentPage?.label || "Admin"}
             </p>
           </div>
-          <AdminNotifications />
         </div>
       </div>
 
